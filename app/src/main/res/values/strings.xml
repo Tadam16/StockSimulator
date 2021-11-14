@@ -6,4 +6,5 @@
     <string name="dollar">$</string>
     <string name="button_ok">OK</string>
     <string name="button_cancel">Cancel</string>
+    <string name="delete_portfolio_button">Delete Portfolio</string>
 </resources>

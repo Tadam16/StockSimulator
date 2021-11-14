@@ -15,6 +15,7 @@
         android:text="@string/portfolio_name"/>
 
     <EditText
+        android:id="@+id/portfolio_dialog_name"
         android:layout_width="200dp"
         android:layout_height="wrap_content" />
 
@@ -30,6 +31,7 @@
         android:text="@string/initial_capital" />
 
     <EditText
+        android:id="@+id/portfolio_dialog_capital"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:inputType="number"/>
