@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import mobwebhf.stocksimulator.adapters.PortfolioAdapter
 import mobwebhf.stocksimulator.data.PortfolioData
 import mobwebhf.stocksimulator.databinding.PortfoliosBinding
@@ -18,6 +19,7 @@ class PortfolioActivity : AppCompatActivity() {
 
         binding = PortfoliosBinding.inflate(layoutInflater)
         adapter = PortfolioAdapter()
+        binding.portfolioList.layoutManager = LinearLayoutManager(this)
         binding.portfolioList.adapter = adapter
         setContentView(binding.root)
     }

@@ -34,7 +34,7 @@ class PortfolioAdapter() : RecyclerView.Adapter<PortfolioAdapter.ViewHolder>() {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.portfolio_element, parent)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.portfolio_element, parent,false)
         return ViewHolder(view)
     }
 
@@ -54,5 +54,6 @@ class PortfolioAdapter() : RecyclerView.Adapter<PortfolioAdapter.ViewHolder>() {
     fun addPortfolio(portfolioData: PortfolioData){
         portfoliolist.add(portfolioData)
         notifyItemInserted(portfoliolist.size-1)
+        notifyDataSetChanged()
     }
 }
