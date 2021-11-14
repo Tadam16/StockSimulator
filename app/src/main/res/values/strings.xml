@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">StockSimulator</string>
+    <string name="new_portfolio">New Portfolio</string>
+    <string name="portfolio_name">Portfolio name:</string>
+    <string name="initial_capital">Initial capital:</string>
+    <string name="dollar">$</string>
+    <string name="button_ok">OK</string>
+    <string name="button_cancel">Cancel</string>
 </resources>

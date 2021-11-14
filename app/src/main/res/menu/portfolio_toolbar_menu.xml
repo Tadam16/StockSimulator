@@ -2,6 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/new_portfolio_button"
-        android:title="New Portfolio"
+        android:title="@string/new_portfolio"
         app:showAsAction="always" />
 </menu>

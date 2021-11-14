@@ -2,6 +2,7 @@ package mobwebhf.stocksimulator
 
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import mobwebhf.stocksimulator.databinding.PortfoliosBinding
 
@@ -14,6 +15,12 @@ class PortfolioActivity : AppCompatActivity() {
 
         binding = PortfoliosBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        PortfolioDialogFragment().show(supportFragmentManager, null)
+        return true
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
