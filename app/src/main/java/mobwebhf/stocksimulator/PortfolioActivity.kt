@@ -19,7 +19,7 @@ class PortfolioActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = PortfoliosBinding.inflate(layoutInflater)
 
-        adapter = PortfolioAdapter()
+        adapter = PortfolioAdapter(this)
         binding.portfolioList.layoutManager = LinearLayoutManager(this)
         binding.portfolioList.adapter = adapter
         setContentView(binding.root)

@@ -1,15 +1,18 @@
 package mobwebhf.stocksimulator.adapters
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import mobwebhf.stocksimulator.PortfolioActivity
 import mobwebhf.stocksimulator.R
+import mobwebhf.stocksimulator.StockActivity
 import mobwebhf.stocksimulator.data.PortfolioData
 
-class PortfolioAdapter() : RecyclerView.Adapter<PortfolioAdapter.ViewHolder>() {
+class PortfolioAdapter(val activity : PortfolioActivity) : RecyclerView.Adapter<PortfolioAdapter.ViewHolder>() {
 
     class ViewHolder(v : View) : RecyclerView.ViewHolder(v) {
         val name : TextView
@@ -17,8 +20,10 @@ class PortfolioAdapter() : RecyclerView.Adapter<PortfolioAdapter.ViewHolder>() {
         val profit : TextView
         val money : TextView
         val delete : Button
+        val root : View
 
         init {
+            root = v
             name = v.findViewById(R.id.portfolio_name)
             value = v.findViewById(R.id.portfolio_value)
             profit = v.findViewById(R.id.portfolio_profit)
@@ -48,6 +53,10 @@ class PortfolioAdapter() : RecyclerView.Adapter<PortfolioAdapter.ViewHolder>() {
             portfoliolist.removeAt(position)
             notifyItemRemoved(position)
             //TODO persistent delete
+        }
+        holder.root.setOnClickListener {
+            val intent = Intent(activity, StockActivity::class.java) //todo parameters
+            activity.startActivity(intent)
         }
     }
 

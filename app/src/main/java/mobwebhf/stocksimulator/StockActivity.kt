@@ -10,7 +10,7 @@ import mobwebhf.stocksimulator.data.PortfolioData
 import mobwebhf.stocksimulator.databinding.StocksBinding
 import mobwebhf.stocksimulator.fragments.StockDialogFragment
 
-class StockActivity(val portfolio : PortfolioData) : AppCompatActivity(){
+class StockActivity() : AppCompatActivity(){
 
     private lateinit var binding : StocksBinding
 
