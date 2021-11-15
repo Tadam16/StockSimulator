@@ -54,6 +54,5 @@ class PortfolioAdapter() : RecyclerView.Adapter<PortfolioAdapter.ViewHolder>() {
     fun addPortfolio(portfolioData: PortfolioData){
         portfoliolist.add(portfolioData)
         notifyItemInserted(portfoliolist.size-1)
-        notifyDataSetChanged()
     }
 }

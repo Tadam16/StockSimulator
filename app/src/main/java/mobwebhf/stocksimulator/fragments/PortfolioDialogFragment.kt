@@ -1,10 +1,11 @@
-package mobwebhf.stocksimulator
+package mobwebhf.stocksimulator.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import mobwebhf.stocksimulator.PortfolioActivity
 import mobwebhf.stocksimulator.data.PortfolioData
 import mobwebhf.stocksimulator.databinding.PortfolioDialogBinding
 

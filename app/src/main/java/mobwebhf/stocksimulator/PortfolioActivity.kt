@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import mobwebhf.stocksimulator.adapters.PortfolioAdapter
 import mobwebhf.stocksimulator.data.PortfolioData
 import mobwebhf.stocksimulator.databinding.PortfoliosBinding
+import mobwebhf.stocksimulator.fragments.PortfolioDialogFragment
 
 class PortfolioActivity : AppCompatActivity() {
 

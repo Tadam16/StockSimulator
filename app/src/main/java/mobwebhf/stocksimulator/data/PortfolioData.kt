@@ -2,7 +2,7 @@ package mobwebhf.stocksimulator.data
 
 class PortfolioData (
     val name : String,
-    val money : Double
+    var money : Double
     //TODO store list of stocks
 )
 {
