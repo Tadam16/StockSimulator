@@ -10,4 +10,8 @@
     <string name="buy_button">BUY</string>
     <string name="sell_button">SELL</string>
     <string name="add_stock_button">Add Stock</string>
+    <string name="price_string">Price: %1$s$ Quantity: %2$s</string>
+    <string name="stock_dialog_transaction_quantity">Transaction quantity:</string>
+    <string name="stock_dialogtransaction_value">Transaction value: %1$s$</string>
+    <string name="stock_dialog_balance">Balance: %1$s$</string>
 </resources>

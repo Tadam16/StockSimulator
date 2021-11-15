@@ -6,9 +6,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import mobwebhf.stocksimulator.R
+import mobwebhf.stocksimulator.StockActivity
 import mobwebhf.stocksimulator.data.StockData
+import mobwebhf.stocksimulator.fragments.StockDialogFragment
 
-class StockAdapter : RecyclerView.Adapter<StockAdapter.ViewHolder>() {
+class StockAdapter(val activity: StockActivity) : RecyclerView.Adapter<StockAdapter.ViewHolder>() {
 
     private val stocks = mutableListOf<StockData>()
 
@@ -18,8 +20,10 @@ class StockAdapter : RecyclerView.Adapter<StockAdapter.ViewHolder>() {
         val stock_value : TextView
         val stock_quantity : TextView
         val stock_profit : TextView
+        val stock_root : View
 
         init {
+            stock_root = v
             stock_name = v.findViewById(R.id.stock_name)
             stock_price= v.findViewById(R.id.stock_price)
             stock_quantity = v.findViewById(R.id.stock_quantity)
@@ -40,6 +44,10 @@ class StockAdapter : RecyclerView.Adapter<StockAdapter.ViewHolder>() {
         holder.stock_profit.text =data.profit.toString()
         holder.stock_quantity.text = data.quantity.toString()
         holder.stock_value.text = data.value.toString()
+        holder.stock_root.setOnClickListener {
+            val dialog = StockDialogFragment(data)
+            dialog.show(activity.supportFragmentManager, null)
+        }
     }
 
     override fun getItemCount() = stocks.size

@@ -17,8 +17,8 @@ class PortfolioActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = PortfoliosBinding.inflate(layoutInflater)
+
         adapter = PortfolioAdapter()
         binding.portfolioList.layoutManager = LinearLayoutManager(this)
         binding.portfolioList.adapter = adapter
