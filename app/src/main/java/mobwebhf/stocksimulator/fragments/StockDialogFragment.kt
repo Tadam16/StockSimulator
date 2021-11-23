@@ -10,7 +10,7 @@ import mobwebhf.stocksimulator.R
 import mobwebhf.stocksimulator.data.StockData
 import mobwebhf.stocksimulator.databinding.StockDialogBinding
 
-class StockDialogFragment(val listener : Listener, val stock : StockData? = null) : DialogFragment() {
+class StockDialogFragment(val listener : Listener, val stock : StockData? = null, val balance : Double = 0.0) : DialogFragment() {
 
     private lateinit var binding: StockDialogBinding
 
@@ -18,7 +18,7 @@ class StockDialogFragment(val listener : Listener, val stock : StockData? = null
         super.onCreate(savedInstanceState)
         binding = StockDialogBinding.inflate(layoutInflater)
 
-        binding.stockDialogBalance.text = getString(R.string.stock_dialog_balance, listener.getBalance().toString())
+        binding.stockDialogBalance.text = getString(R.string.stock_dialog_balance, balance.toString())
         if(stock == null) loadNewStock() else loadExistingStock(stock)
 
         binding.stockDialogQuantity.addTextChangedListener {
@@ -29,19 +29,25 @@ class StockDialogFragment(val listener : Listener, val stock : StockData? = null
             }
             binding.stockDialogTransactionValue.text = getString(R.string.stock_dialogtransaction_value, arg)
         }
-        binding.stockDialogBuyButton.setOnClickListener {  }
-        binding.stockDialogSellButton.setOnClickListener {  }
+        binding.stockDialogBuyButton.setOnClickListener {
+
+        }
+        binding.stockDialogSellButton.setOnClickListener {
+
+        }
 
         return binding.root
     }
 
     private fun loadNewStock(){
+        binding.stockDialogQuantity.isEnabled = false
+
 
     }
 
     private fun loadExistingStock(stock : StockData){
         binding.stockInput.setText(stock.name)
-        binding.stockInput.isFocusable = false
+        binding.stockInput.isEnabled = false
         binding.stockdialogPrice.text = getString(R.string.price_string, stock.price.toString(), stock.quantity.toString())
 
     }
@@ -49,6 +55,5 @@ class StockDialogFragment(val listener : Listener, val stock : StockData? = null
     interface Listener{
         fun addStock(stock : StockData)
         fun modifyStock(stock : StockData)
-        fun getBalance() : Double
     }
 }

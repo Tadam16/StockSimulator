@@ -3,8 +3,7 @@ package mobwebhf.stocksimulator.data
 import android.content.Context
 import androidx.room.*
 
-@Database(entities = [StockData::class, PortfolioData::class], version = 2)
-@TypeConverters(value = [PortfolioData::class])
+@Database(entities = [StockData::class, PortfolioData::class], version = 3)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun portfolioDao(): PortfolioDao

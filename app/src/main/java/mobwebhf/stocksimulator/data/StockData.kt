@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "stock")
 class StockData(
     @PrimaryKey(autoGenerate = true) var id: Long?,
+    @ColumnInfo(name = "portfoliokey") var key : Long,
     @ColumnInfo(name = "stockname") val name: String,
     @ColumnInfo(name= "stockprice") var price: Double,
     @ColumnInfo(name= "stockquantity") var quantity: Double,

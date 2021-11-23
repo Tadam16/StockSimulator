@@ -62,6 +62,14 @@ class StockAdapter(val listener: Listener) : RecyclerView.Adapter<StockAdapter.V
         notifyItemRemoved(idx)
     }
 
+    fun updateStock(stock : StockData) {
+        for(i in 0 until stocks.size)
+            if(stocks[i].id == stock.id){
+                stocks[i] = stock
+                return
+            }
+    }
+
     interface Listener {
         fun stockSelected(stock : StockData)
     }

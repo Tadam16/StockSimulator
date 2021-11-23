@@ -18,7 +18,10 @@ class PortfolioDialogFragment(val listener: Listener) : DialogFragment() {
 
         binding = PortfolioDialogBinding.inflate(inflater)
         binding.buttonOk.setOnClickListener{
-            listener.addPortfolio(PortfolioData(null,binding.portfolioDialogName.text.toString(), binding.portfolioDialogCapital.text.toString().toDouble(), binding.portfolioDialogCapital.text.toString().toDouble()))
+            listener.addPortfolio(PortfolioData(null,binding.portfolioDialogName.text.toString(),
+                binding.portfolioDialogCapital.text.toString().toDouble(),
+                binding.portfolioDialogCapital.text.toString().toDouble(),
+                binding.portfolioDialogCapital.text.toString().toDouble()))
             dismiss()
         }
         binding.buttonCancel.setOnClickListener {

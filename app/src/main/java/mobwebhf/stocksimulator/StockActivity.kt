@@ -15,6 +15,10 @@ import kotlin.concurrent.thread
 
 class StockActivity() : AppCompatActivity(), StockAdapter.Listener, StockDialogFragment.Listener{
 
+    companion object {
+        val PORTFOLIO_KEY = "StockActivityPortfolioKey"
+    }
+
     private lateinit var binding : StocksBinding
     private lateinit var database : AppDatabase
     private lateinit var portfolio : PortfolioData
@@ -23,9 +27,10 @@ class StockActivity() : AppCompatActivity(), StockAdapter.Listener, StockDialogF
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        portfolio = intent.getSerializableExtra(PORTFOLIO_KEY) as PortfolioData
         database = AppDatabase.getInstance(applicationContext)
         binding = StocksBinding.inflate(layoutInflater)
-        portfolio = database.portfolioDao().getPortfolioById(intent.extras!!.get("id") as Long)
+
 
         adapter = StockAdapter(this)
         binding.stockList.layoutManager = LinearLayoutManager(this)
@@ -45,7 +50,7 @@ class StockActivity() : AppCompatActivity(), StockAdapter.Listener, StockDialogF
     }
 
     override fun stockSelected(stock: StockData) {
-        val dialog = StockDialogFragment(this)
+        val dialog = StockDialogFragment(this, stock, portfolio.money)
         dialog.show(supportFragmentManager, null)
     }
 
@@ -59,11 +64,12 @@ class StockActivity() : AppCompatActivity(), StockAdapter.Listener, StockDialogF
     }
 
     override fun modifyStock(stock: StockData) {
-        TODO("Not yet implemented")
-    }
-
-    override fun getBalance(): Double {
-        TODO("Not yet implemented")
+        thread {
+            database.stockDao().updateStock(stock);
+            runOnUiThread(){
+                adapter.updateStock(stock)
+            }
+        }
     }
 
 }

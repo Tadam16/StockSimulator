@@ -55,7 +55,7 @@ class PortfolioActivity : AppCompatActivity(), PortfolioAdapter.Listener, Portfo
     }
 
     override fun itemSelected(data: PortfolioData) {
-        startActivity(Intent(this, StockActivity::class.java).putExtra("id", data.id))
+        startActivity(Intent(this, StockActivity::class.java).putExtra(StockActivity.PORTFOLIO_KEY, data))
     }
 
     override fun addPortfolio(data: PortfolioData) {
