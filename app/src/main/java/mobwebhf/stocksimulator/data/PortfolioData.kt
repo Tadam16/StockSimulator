@@ -1,8 +1,14 @@
 package mobwebhf.stocksimulator.data
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "portfolio")
 class PortfolioData (
-    val name : String,
-    var money : Double
+    @PrimaryKey(autoGenerate = true) var id: Long?,
+    @ColumnInfo(name= "portfolioname") var name : String,
+    @ColumnInfo(name= "portfoliomoney") var money : Double
     //TODO store list of stocks
 )
 {
