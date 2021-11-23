@@ -1,18 +1,15 @@
 package mobwebhf.stocksimulator.adapters
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import mobwebhf.stocksimulator.PortfolioActivity
 import mobwebhf.stocksimulator.R
-import mobwebhf.stocksimulator.StockActivity
 import mobwebhf.stocksimulator.data.PortfolioData
 
-class PortfolioAdapter(val activity : PortfolioActivity) : RecyclerView.Adapter<PortfolioAdapter.ViewHolder>() {
+class PortfolioAdapter(val listener : Listener) : RecyclerView.Adapter<PortfolioAdapter.ViewHolder>() {
 
     class ViewHolder(v : View) : RecyclerView.ViewHolder(v) {
         val name : TextView
@@ -32,7 +29,7 @@ class PortfolioAdapter(val activity : PortfolioActivity) : RecyclerView.Adapter<
         }
     }
 
-    private val portfoliolist = mutableListOf<PortfolioData>()
+    private var portfoliolist = mutableListOf<PortfolioData>()
 
     override fun getItemCount(): Int {
         return portfoliolist.size
@@ -52,16 +49,25 @@ class PortfolioAdapter(val activity : PortfolioActivity) : RecyclerView.Adapter<
         holder.delete.setOnClickListener {
             portfoliolist.removeAt(position)
             notifyItemRemoved(position)
-            //TODO persistent delete
+            listener.itemRemoved(data)
         }
         holder.root.setOnClickListener {
-            val intent = Intent(activity, StockActivity::class.java) //todo parameters
-            activity.startActivity(intent)
+            listener.itemSelected(data)
         }
     }
 
     fun addPortfolio(portfolioData: PortfolioData){
         portfoliolist.add(portfolioData)
         notifyItemInserted(portfoliolist.size-1)
+    }
+
+    fun updateDataset(data : MutableList<PortfolioData>){
+        portfoliolist = data;
+        notifyDataSetChanged()
+    }
+
+    interface Listener{
+        fun itemRemoved(data: PortfolioData)
+        fun itemSelected(data: PortfolioData)
     }
 }

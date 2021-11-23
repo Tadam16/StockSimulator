@@ -9,7 +9,7 @@ import mobwebhf.stocksimulator.PortfolioActivity
 import mobwebhf.stocksimulator.data.PortfolioData
 import mobwebhf.stocksimulator.databinding.PortfolioDialogBinding
 
-class PortfolioDialogFragment(val activity: PortfolioActivity) : DialogFragment() {
+class PortfolioDialogFragment(val listener: Listener) : DialogFragment() {
 
     private lateinit var binding : PortfolioDialogBinding
 
@@ -18,7 +18,7 @@ class PortfolioDialogFragment(val activity: PortfolioActivity) : DialogFragment(
 
         binding = PortfolioDialogBinding.inflate(inflater)
         binding.buttonOk.setOnClickListener{
-            activity.newPortfolio(PortfolioData(binding.portfolioDialogName.text.toString(), binding.portfolioDialogCapital.text.toString().toDouble()))
+            listener.addPortfolio(PortfolioData(null,binding.portfolioDialogName.text.toString(), binding.portfolioDialogCapital.text.toString().toDouble()))
             dismiss()
         }
         binding.buttonCancel.setOnClickListener {
@@ -26,5 +26,9 @@ class PortfolioDialogFragment(val activity: PortfolioActivity) : DialogFragment(
         }
 
         return binding.root
+    }
+
+    interface Listener{
+        fun addPortfolio(data : PortfolioData)
     }
 }
