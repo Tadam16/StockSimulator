@@ -10,7 +10,7 @@ import mobwebhf.stocksimulator.StockActivity
 import mobwebhf.stocksimulator.data.StockData
 import mobwebhf.stocksimulator.fragments.StockDialogFragment
 
-class StockAdapter(val activity: StockActivity) : RecyclerView.Adapter<StockAdapter.ViewHolder>() {
+class StockAdapter(val listener: Listener) : RecyclerView.Adapter<StockAdapter.ViewHolder>() {
 
     private val stocks = mutableListOf<StockData>()
 
@@ -45,16 +45,25 @@ class StockAdapter(val activity: StockActivity) : RecyclerView.Adapter<StockAdap
         holder.stock_quantity.text = data.quantity.toString()
         holder.stock_value.text = data.value.toString()
         holder.stock_root.setOnClickListener {
-            val dialog = StockDialogFragment(data)
-            dialog.show(activity.supportFragmentManager, null)
+            listener.stockSelected(data)
         }
     }
 
     override fun getItemCount() = stocks.size
 
-    fun AddStock(stock : StockData) {
+    fun addStock(stock : StockData) {
         stocks.add(stock)
         notifyItemInserted(stocks.size-1)
+    }
+
+    fun removeStock(stock : StockData) {
+        val idx = stocks.indexOf(stock)
+        stocks.removeAt(idx)
+        notifyItemRemoved(idx)
+    }
+
+    interface Listener {
+        fun stockSelected(stock : StockData)
     }
 
 }

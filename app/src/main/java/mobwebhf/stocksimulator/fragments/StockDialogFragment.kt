@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
+import mobwebhf.stocksimulator.R
 import mobwebhf.stocksimulator.data.StockData
 import mobwebhf.stocksimulator.databinding.StockDialogBinding
 
-class StockDialogFragment(val stock : StockData? = null) : DialogFragment() {
+class StockDialogFragment(val listener : Listener, val stock : StockData? = null) : DialogFragment() {
 
     private lateinit var binding: StockDialogBinding
 
@@ -16,7 +18,19 @@ class StockDialogFragment(val stock : StockData? = null) : DialogFragment() {
         super.onCreate(savedInstanceState)
         binding = StockDialogBinding.inflate(layoutInflater)
 
-        if(stock == null) loadNewStock() else loadExistingStock()
+        binding.stockDialogBalance.text = getString(R.string.stock_dialog_balance, listener.getBalance().toString())
+        if(stock == null) loadNewStock() else loadExistingStock(stock)
+
+        binding.stockDialogQuantity.addTextChangedListener {
+            val text = it.toString()
+            var arg = "0"
+            if(text.isNotEmpty()){
+                arg = (text.toDouble() * binding.stockdialogPrice.text.toString().toDouble()).toString()
+            }
+            binding.stockDialogTransactionValue.text = getString(R.string.stock_dialogtransaction_value, arg)
+        }
+        binding.stockDialogBuyButton.setOnClickListener {  }
+        binding.stockDialogSellButton.setOnClickListener {  }
 
         return binding.root
     }
@@ -25,7 +39,16 @@ class StockDialogFragment(val stock : StockData? = null) : DialogFragment() {
 
     }
 
-    private fun loadExistingStock(){
+    private fun loadExistingStock(stock : StockData){
+        binding.stockInput.setText(stock.name)
+        binding.stockInput.isFocusable = false
+        binding.stockdialogPrice.text = getString(R.string.price_string, stock.price.toString(), stock.quantity.toString())
 
+    }
+
+    interface Listener{
+        fun addStock(stock : StockData)
+        fun modifyStock(stock : StockData)
+        fun getBalance() : Double
     }
 }

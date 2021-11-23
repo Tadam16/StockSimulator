@@ -8,6 +8,9 @@ interface PortfolioDao {
     @Query("SELECT * FROM portfolio")
     fun getPortfolios(): List<PortfolioData>
 
+    @Query("SELECT * FROM portfolio WHERE id = :id")
+    fun getPortfolioById(id : Long) : PortfolioData
+
     @Insert
     fun addPortfolio(p : PortfolioData): Long
 

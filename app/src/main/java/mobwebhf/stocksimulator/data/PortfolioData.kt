@@ -9,13 +9,23 @@ class PortfolioData (
     @PrimaryKey(autoGenerate = true) var id: Long? = null,
     @ColumnInfo(name= "portfolioname") var name : String,
     @ColumnInfo(name= "portfoliomoney") var money : Double,
+    @ColumnInfo(name= "initialcapital") var capital : Double,
     @ColumnInfo(name= "portfolioStocks") var stocks : MutableList<StockData> = mutableListOf<StockData>()
 )
 {
     val value : Double
-        get() {return money}
+        get() {
+            var sum = money
+            for (stock in stocks){
+                sum += stock.quantity * stock.price
+            }
+            return sum
+        }
+
     val profit : Double
-        get() {return 0.0}
+        get() {
+            return value - capital
+        }
 
     companion object{
         @JvmStatic
