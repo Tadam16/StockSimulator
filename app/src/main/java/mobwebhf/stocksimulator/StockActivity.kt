@@ -1,5 +1,6 @@
 package mobwebhf.stocksimulator
 
+import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -36,6 +37,8 @@ class StockActivity() : AppCompatActivity(), StockAdapter.Listener, StockDialogF
         binding.stockList.layoutManager = LinearLayoutManager(this)
         binding.stockList.adapter = adapter
         setContentView(binding.root)
+
+        supportActionBar?.title = getString(R.string.stocks_title, portfolio.name)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -66,14 +69,23 @@ class StockActivity() : AppCompatActivity(), StockAdapter.Listener, StockDialogF
     override fun modifyStock(stock: StockData) {
         thread {
             database.stockDao().updateStock(stock);
-            runOnUiThread(){
+            runOnUiThread{
                 adapter.updateStock(stock)
             }
         }
     }
 
     override fun removeStock(stock: StockData) {
+        thread {
+            database.stockDao().removeStock(stock)
+            runOnUiThread{
+                adapter.removeStock(stock)
+            }
+        }
+    }
 
+    override fun getContext(): Context {
+        return applicationContext
     }
 
 }

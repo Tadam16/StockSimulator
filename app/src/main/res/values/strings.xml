@@ -14,4 +14,6 @@
     <string name="stock_dialog_transaction_quantity">Transaction quantity:</string>
     <string name="stock_dialogtransaction_value">Transaction value: %1$s$</string>
     <string name="stock_dialog_balance">Balance: %1$s$</string>
+    <string name="portfolios_title">Portfolios</string>
+    <string name="stocks_title">%1$s portfolio</string>
 </resources>

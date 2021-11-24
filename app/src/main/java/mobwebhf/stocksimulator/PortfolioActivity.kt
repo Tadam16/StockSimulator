@@ -35,6 +35,8 @@ class PortfolioActivity : AppCompatActivity(), PortfolioAdapter.Listener, Portfo
                 adapter.updateDataset(list)
             }
         }
+
+        supportActionBar?.title = getString(R.string.portfolios_title)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
