@@ -39,7 +39,7 @@ class StockActivity() : AppCompatActivity(), StockAdapter.Listener, StockDialogF
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val dialog = StockDialogFragment(this)
+        val dialog = StockDialogFragment(this, portfolio)
         dialog.show(supportFragmentManager, null)
         return true
     }
@@ -50,7 +50,7 @@ class StockActivity() : AppCompatActivity(), StockAdapter.Listener, StockDialogF
     }
 
     override fun stockSelected(stock: StockData) {
-        val dialog = StockDialogFragment(this, stock, portfolio.money)
+        val dialog = StockDialogFragment(this, portfolio, stock)
         dialog.show(supportFragmentManager, null)
     }
 
@@ -70,6 +70,10 @@ class StockActivity() : AppCompatActivity(), StockAdapter.Listener, StockDialogF
                 adapter.updateStock(stock)
             }
         }
+    }
+
+    override fun removeStock(stock: StockData) {
+
     }
 
 }
