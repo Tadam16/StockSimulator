@@ -14,7 +14,11 @@ class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val 
 
     }
 
-    fun getCurrentPrice(name : String) {
+    fun getQuantity(name : String) : Double {
+
+    }
+
+    fun getCurrentPrice(name : String) : Double {
 
     }
 
@@ -22,7 +26,7 @@ class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val 
 
     }
 
-    fun getHistoricPrices(name : String) {
+    fun getHistoricPrices(name : String) : List<Double> {
 
     }
 
