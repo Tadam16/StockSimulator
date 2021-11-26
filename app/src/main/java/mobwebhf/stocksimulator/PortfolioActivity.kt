@@ -47,12 +47,14 @@ class PortfolioActivity : AppCompatActivity(), PortfolioAdapter.Listener, Portfo
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.portfolio_toolbar_menu, menu)
-        return true;
+        return true
     }
 
     override fun itemRemoved(data: PortfolioData) {
         thread {
             database.portfolioDao().removePortfolio(data)
+            for (stock in database.stockDao().getStocks(data.id!!))
+                database.stockDao().removeStock(stock)
         }
     }
 

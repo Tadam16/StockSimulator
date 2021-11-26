@@ -22,7 +22,7 @@ class StockDialogFragment(
 ) : DialogFragment() {
 
     private lateinit var binding: StockDialogBinding
-    val price = 0.0 //todo calculate price
+    val price = 100.0 //todo calculate price
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -126,6 +126,16 @@ class StockDialogFragment(
         binding.stockdialogPrice.text =
             getString(R.string.price_string, stock.price.toString(), stock.quantity.toString())
 
+    }
+
+    private fun quantityValidator(quantity : Double) : Boolean{
+        val currentQuantity = stock?.quantity ?: 0.0
+        if(-quantity > currentQuantity)
+            return false
+        val transValue = quantity * price
+        if(transValue > portfolio.money)
+            return false
+        return true
     }
 
     interface Listener {
