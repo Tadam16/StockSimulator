@@ -15,7 +15,7 @@ import mobwebhf.stocksimulator.databinding.StocksBinding
 import mobwebhf.stocksimulator.fragments.StockDialogFragment
 import kotlin.concurrent.thread
 
-class StockActivity() : AppCompatActivity(), StockAdapter.Listener, PortfolioManager.Listener{
+class StockActivity() : AppCompatActivity(), StockAdapter.Listener{
 
     companion object {
         val PORTFOLIO_KEY = "StockActivityPortfolioKey"
@@ -24,7 +24,7 @@ class StockActivity() : AppCompatActivity(), StockAdapter.Listener, PortfolioMan
     private lateinit var binding : StocksBinding
     private lateinit var database : AppDatabase
     private lateinit var portfolio : PortfolioData
-    private lateinit var adapter : StockAdapter
+    private val adapter = StockAdapter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,8 +33,6 @@ class StockActivity() : AppCompatActivity(), StockAdapter.Listener, PortfolioMan
         database = AppDatabase.getInstance(applicationContext)
         binding = StocksBinding.inflate(layoutInflater)
 
-
-        adapter = StockAdapter(this)
         binding.stockList.layoutManager = LinearLayoutManager(this)
         binding.stockList.adapter = adapter
         setContentView(binding.root)
@@ -43,7 +41,7 @@ class StockActivity() : AppCompatActivity(), StockAdapter.Listener, PortfolioMan
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val dialog = StockDialogFragment(PortfolioManager(portfolio, database, this))
+        val dialog = StockDialogFragment(PortfolioManager(portfolio, database, adapter))
         dialog.show(supportFragmentManager, null)
         return true
     }
@@ -54,7 +52,7 @@ class StockActivity() : AppCompatActivity(), StockAdapter.Listener, PortfolioMan
     }
 
     override fun stockSelected(stock: StockData) {
-        val dialog = StockDialogFragment(PortfolioManager(portfolio, database, this), stock.name)
+        val dialog = StockDialogFragment(PortfolioManager(portfolio, database, adapter), stock.name)
         dialog.show(supportFragmentManager, null)
     }
 

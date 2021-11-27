@@ -7,10 +7,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import mobwebhf.stocksimulator.R
 import mobwebhf.stocksimulator.StockActivity
+import mobwebhf.stocksimulator.data.PortfolioManager
 import mobwebhf.stocksimulator.data.StockData
 import mobwebhf.stocksimulator.fragments.StockDialogFragment
 
-class StockAdapter(val listener: Listener) : RecyclerView.Adapter<StockAdapter.ViewHolder>() {
+class StockAdapter(val listener: Listener) : RecyclerView.Adapter<StockAdapter.ViewHolder>(), PortfolioManager.Listener {
 
     private val stocks = mutableListOf<StockData>()
 
@@ -51,27 +52,27 @@ class StockAdapter(val listener: Listener) : RecyclerView.Adapter<StockAdapter.V
 
     override fun getItemCount() = stocks.size
 
-    fun addStock(stock : StockData) {
+    interface Listener {
+        fun stockSelected(stock : StockData)
+    }
+
+    override fun stockCreated(stock: StockData) {
         stocks.add(stock)
         notifyItemInserted(stocks.size-1)
     }
 
-    fun removeStock(stock : StockData) {
+    override fun stockDestroyed(stock: StockData) {
         val idx = stocks.indexOf(stock)
         stocks.removeAt(idx)
         notifyItemRemoved(idx)
     }
 
-    fun updateStock(stock : StockData) {
+    override fun stockUpdated(stock: StockData) {
         for(i in 0 until stocks.size)
             if(stocks[i].id == stock.id){
                 stocks[i] = stock
                 return
             }
-    }
-
-    interface Listener {
-        fun stockSelected(stock : StockData)
     }
 
 }

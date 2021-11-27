@@ -1,6 +1,5 @@
 package mobwebhf.stocksimulator.fragments
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,13 +9,12 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import mobwebhf.stocksimulator.R
 import mobwebhf.stocksimulator.data.PortfolioManager
-import mobwebhf.stocksimulator.data.StockData
 import mobwebhf.stocksimulator.databinding.StockDialogBinding
 import kotlin.concurrent.thread
 
 class StockDialogFragment(
     val manager : PortfolioManager,
-    val stockname : String? = null
+    var stockname : String? = null
 ) : DialogFragment() {
 
     private lateinit var binding: StockDialogBinding
@@ -40,17 +38,23 @@ class StockDialogFragment(
         thread{
             balance = manager.getBalance()
             StockList = manager.getStockNameList()
+            loadStockData()
+        }
+
+        return binding.root
+    }
+
+    private fun loadStockData(){
+        thread{
             if(stockname != null){
-                currentQuantity = manager.getQuantity(stockname)
-                currentPrice = manager.getCurrentPrice(stockname)
-                PriceHistory = manager.getHistoricPrices(stockname)
+                currentQuantity = manager.getQuantity(stockname!!)
+                currentPrice = manager.getCurrentPrice(stockname!!)
+                PriceHistory = manager.getHistoricPrices(stockname!!)
             }
             requireActivity().runOnUiThread {
                 initViewElements()
             }
         }
-
-        return binding.root
     }
 
     private fun lockBuy(){
@@ -77,13 +81,13 @@ class StockDialogFragment(
 
         binding.stockDialogBuyButton.setOnClickListener {
             val quantity = binding.stockDialogQuantity.text.toString().toDouble()
-            manager.BuyStock(stockname!!, quantity)
+            manager.BuyStock(stockname!!, quantity, currentPrice)
             dismiss()
         }
 
         binding.stockDialogSellButton.setOnClickListener {
             val quantity = binding.stockDialogQuantity.text.toString().toDouble()
-            manager.SellStock(stockname!!, quantity)
+            manager.SellStock(stockname!!, quantity, currentPrice)
             dismiss()
         }
 
@@ -91,8 +95,10 @@ class StockDialogFragment(
 
             override fun isValid(p0: CharSequence?): Boolean {
                 val ret = StockList.contains(p0.toString())
-                if(ret)
+                if(ret) {
+                    stockname = p0.toString()
                     unlockBuy()
+                }
                 else
                     lockBuy()
                 return ret

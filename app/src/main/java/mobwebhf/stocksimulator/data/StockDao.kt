@@ -9,7 +9,7 @@ interface StockDao {
     fun getStocks(portfolio_key : Long) : List<StockData>
 
     @Query("SELECT * FROM stock WHERE portfoliokey = :portfolio_key AND stockname = :stock_name")
-    fun getStock(portfolio_key: Long, stock_name : String) : StockData
+    fun getStock(portfolio_key: Long, stock_name : String) : List<StockData>
 
     @Insert
     fun addStock(stock : StockData) : Long
