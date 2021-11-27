@@ -1,7 +1,6 @@
 package mobwebhf.stocksimulator.fragments
 
 import android.content.Context
-import android.database.DataSetObserver
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,11 +9,9 @@ import android.widget.*
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import mobwebhf.stocksimulator.R
-import mobwebhf.stocksimulator.data.PortfolioData
 import mobwebhf.stocksimulator.data.PortfolioManager
 import mobwebhf.stocksimulator.data.StockData
 import mobwebhf.stocksimulator.databinding.StockDialogBinding
-import javax.xml.validation.Validator
 import kotlin.concurrent.thread
 
 class StockDialogFragment(
@@ -57,28 +54,25 @@ class StockDialogFragment(
     }
 
     private fun lockBuy(){
-
+        binding.stockDialogQuantity.isEnabled = false
+        binding.stockDialogSellButton.isEnabled = false
+        binding.stockDialogBuyButton.isEnabled = false
     }
 
     private fun unlockBuy(){
-
+        binding.stockDialogQuantity.isEnabled = true
+        validateOptions()
     }
 
     private fun initViewElements() {
         binding.stockDialogBalance.text =
             getString(R.string.stock_dialog_balance, balance.toString())
 
+        binding.stockdialogPrice.text =
+            getString(R.string.price_string, currentPrice.toString(), currentQuantity.toString())
 
         binding.stockDialogQuantity.addTextChangedListener {
-            val text = it.toString()
-            var arg = 0.0
-            if (text.isNotEmpty()) {
-                arg = text.toDouble() * currentPrice
-            }
-            validateoptions(arg)
-            binding.stockDialogTransactionValue.text =
-                getString(R.string.stock_dialogtransaction_value, arg.toString())
-
+            validateOptions()
         }
 
         binding.stockDialogBuyButton.setOnClickListener {
@@ -93,26 +87,43 @@ class StockDialogFragment(
             dismiss()
         }
 
-        binding.stockInput.setAdapter(
-            object : AutoCompleteTextView.Adapter, Filterable, ListAdapter {
+        binding.stockInput.validator = object : AutoCompleteTextView.Validator {
 
+            override fun isValid(p0: CharSequence?): Boolean {
+                val ret = StockList.contains(p0.toString())
+                if(ret)
+                    unlockBuy()
+                else
+                    lockBuy()
+                return ret
             }
-        )
+
+            override fun fixText(p0: CharSequence?): CharSequence {
+                return p0 ?: ""
+            }
+        }
+
+        binding.stockInput.setAdapter(ArrayAdapter(requireActivity().applicationContext, R.layout.stock_autocomplete_list_element,StockList))
+        binding.stockInput.setOnItemClickListener { adapterView, view, i, l -> binding.stockInput.performValidation()} //todo completion handling
+
 
         if(stockname != null){
-            binding.stockInput.isActivated = false
+            binding.stockInput.isEnabled = false
             unlockBuy()
         }
     }
 
-    private fun validateoptions(quantity : Double) {
-
+    private fun validateOptions(){
+        val text = binding.stockDialogQuantity.text
+        var quantity = 0.0
+        if (text.isNotEmpty()) {
+            quantity = text.toString().toDouble()
+        }
+        val transactionValue = quantity*currentPrice
+        binding.stockDialogSellButton.isEnabled = quantity <= currentQuantity
+        binding.stockDialogBuyButton.isEnabled = transactionValue <= balance
+        binding.stockDialogTransactionValue.text =
+            getString(R.string.stock_dialogtransaction_value, quantity.toString())
     }
 
-    interface Listener {
-        fun addStock(stock: StockData)
-        fun modifyStock(stock: StockData)
-        fun removeStock(stock: StockData)
-        fun getContext() : Context
-    }
 }

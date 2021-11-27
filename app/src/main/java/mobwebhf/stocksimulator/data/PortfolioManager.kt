@@ -15,11 +15,11 @@ class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val 
     }
 
     fun getQuantity(name : String) : Double {
-
+        return 10.0
     }
 
     fun getCurrentPrice(name : String) : Double {
-
+        return 100.0
     }
 
     fun getCurrentPrices() {
@@ -27,11 +27,11 @@ class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val 
     }
 
     fun getHistoricPrices(name : String) : List<Double> {
-
+        return emptyList()
     }
 
     fun getStockNameList() : List<String> {
-        return emptyList()
+        return listOf("stock1", "intel", "amd", "meszaros&meszaros")
     }
 
     fun getBalance() : Double {

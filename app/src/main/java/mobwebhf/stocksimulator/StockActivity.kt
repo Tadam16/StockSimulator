@@ -9,12 +9,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import mobwebhf.stocksimulator.adapters.StockAdapter
 import mobwebhf.stocksimulator.data.AppDatabase
 import mobwebhf.stocksimulator.data.PortfolioData
+import mobwebhf.stocksimulator.data.PortfolioManager
 import mobwebhf.stocksimulator.data.StockData
 import mobwebhf.stocksimulator.databinding.StocksBinding
 import mobwebhf.stocksimulator.fragments.StockDialogFragment
 import kotlin.concurrent.thread
 
-class StockActivity() : AppCompatActivity(), StockAdapter.Listener, StockDialogFragment.Listener{
+class StockActivity() : AppCompatActivity(), StockAdapter.Listener, PortfolioManager.Listener{
 
     companion object {
         val PORTFOLIO_KEY = "StockActivityPortfolioKey"
@@ -42,7 +43,7 @@ class StockActivity() : AppCompatActivity(), StockAdapter.Listener, StockDialogF
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val dialog = StockDialogFragment(this, portfolio)
+        val dialog = StockDialogFragment(PortfolioManager(portfolio, database, this))
         dialog.show(supportFragmentManager, null)
         return true
     }
@@ -53,39 +54,8 @@ class StockActivity() : AppCompatActivity(), StockAdapter.Listener, StockDialogF
     }
 
     override fun stockSelected(stock: StockData) {
-        val dialog = StockDialogFragment(this, portfolio, stock)
+        val dialog = StockDialogFragment(PortfolioManager(portfolio, database, this), stock.name)
         dialog.show(supportFragmentManager, null)
-    }
-
-    override fun addStock(stock: StockData) {
-        thread {
-            stock.id = database.stockDao().addStock(stock)
-            runOnUiThread{
-                adapter.addStock(stock)
-            }
-        }
-    }
-
-    override fun modifyStock(stock: StockData) {
-        thread {
-            database.stockDao().updateStock(stock);
-            runOnUiThread{
-                adapter.updateStock(stock)
-            }
-        }
-    }
-
-    override fun removeStock(stock: StockData) {
-        thread {
-            database.stockDao().removeStock(stock)
-            runOnUiThread{
-                adapter.removeStock(stock)
-            }
-        }
-    }
-
-    override fun getContext(): Context {
-        return applicationContext
     }
 
 }
