@@ -97,6 +97,7 @@ class StockDialogFragment(
                 val ret = StockList.contains(p0.toString())
                 if(ret) {
                     stockname = p0.toString()
+                    loadStockData()
                     unlockBuy()
                 }
                 else
@@ -125,7 +126,7 @@ class StockDialogFragment(
         if (text.isNotEmpty()) {
             quantity = text.toString().toDouble()
         }
-        val transactionValue = quantity*currentPrice
+        val transactionValue = quantity * currentPrice
         binding.stockDialogSellButton.isEnabled = quantity <= currentQuantity
         binding.stockDialogBuyButton.isEnabled = transactionValue <= balance
         binding.stockDialogTransactionValue.text =

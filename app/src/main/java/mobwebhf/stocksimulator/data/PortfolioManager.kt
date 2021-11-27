@@ -1,50 +1,54 @@
 package mobwebhf.stocksimulator.data
 
+import kotlin.concurrent.thread
+
 class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val listener : Listener) {
 
 
     fun BuyStock(name : String, quantity : Double, price : Double) {
-        val stocks = db.stockDao().getStock(portfolio.id!!, name)
-        val stock : StockData
-        val transvalue = price*quantity
-        if(stocks.isEmpty()) {
-            stock = StockData(null, portfolio.id!!, name, price, quantity, transvalue)
-            stock.id = db.stockDao().addStock(stock)
-            listener.stockCreated(stock)
+        thread {
+            val stocks = db.stockDao().getStock(portfolio.id!!, name)
+            val stock: StockData
+            val transvalue = price * quantity
+            if (stocks.isEmpty()) {
+                stock = StockData(null, portfolio.id!!, name, price, quantity, transvalue)
+                stock.id = db.stockDao().addStock(stock)
+                listener.stockCreated(stock)
+            } else {
+                stock = stocks[0]
+                stock.price = price
+                stock.spent += transvalue
+                stock.quantity += quantity
+                db.stockDao().updateStock(stock)
+                listener.stockUpdated(stock)
+            }
+            portfolio.money -= transvalue
+            db.portfolioDao().updatePortfolio(portfolio)
         }
-        else {
-            stock = stocks[0]
-            stock.price = price
-            stock.spent += transvalue
-            stock.quantity += quantity
-            db.stockDao().updateStock(stock)
-            listener.stockUpdated(stock)
-        }
-        portfolio.money -= transvalue
-        db.portfolioDao().updatePortfolio(portfolio)
 
     }
 
     fun SellStock(name : String, quantity : Double, price : Double) {
-        val stocks = db.stockDao().getStock(portfolio.id!!, name)
-        val transvalue = price*quantity
-        if(stocks.isEmpty()) {
-            //todo error
+        thread {
+            val stocks = db.stockDao().getStock(portfolio.id!!, name)
+            val transvalue = price * quantity
+            if (stocks.isEmpty()) {
+                //todo error
+            }
+            val stock = stocks[0]
+            stock.price = price
+            stock.quantity -= quantity
+            stock.spent -= transvalue
+            if (stock.quantity > 0) {
+                db.stockDao().updateStock(stock)
+                listener.stockUpdated(stock)
+            } else {
+                db.stockDao().removeStock(stock)
+                listener.stockDestroyed(stock)
+            }
+            portfolio.money -= transvalue
+            db.portfolioDao().updatePortfolio(portfolio)
         }
-        val stock = stocks[0]
-        stock.price = price
-        stock.quantity -= quantity
-        stock.spent -= transvalue
-        if(stock.quantity > 0) {
-            db.stockDao().updateStock(stock)
-            listener.stockUpdated(stock)
-        }
-        else {
-            db.stockDao().removeStock(stock)
-            listener.stockDestroyed(stock)
-        }
-        portfolio.money -= transvalue
-        db.portfolioDao().updatePortfolio(portfolio)
     }
 
     fun getQuantity(name : String) : Double {

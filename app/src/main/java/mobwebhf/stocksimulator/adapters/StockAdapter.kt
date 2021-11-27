@@ -54,25 +54,32 @@ class StockAdapter(val listener: Listener) : RecyclerView.Adapter<StockAdapter.V
 
     interface Listener {
         fun stockSelected(stock : StockData)
+        fun runOnUiThread(r : Runnable)
     }
 
     override fun stockCreated(stock: StockData) {
-        stocks.add(stock)
-        notifyItemInserted(stocks.size-1)
+        listener.runOnUiThread {
+            stocks.add(stock)
+            notifyItemInserted(stocks.size - 1)
+        }
     }
 
     override fun stockDestroyed(stock: StockData) {
-        val idx = stocks.indexOf(stock)
-        stocks.removeAt(idx)
-        notifyItemRemoved(idx)
+        listener.runOnUiThread {
+            val idx = stocks.indexOf(stock)
+            stocks.removeAt(idx)
+            notifyItemRemoved(idx)
+        }
     }
 
     override fun stockUpdated(stock: StockData) {
-        for(i in 0 until stocks.size)
-            if(stocks[i].id == stock.id){
-                stocks[i] = stock
-                return
-            }
+        listener.runOnUiThread {
+            for (i in 0 until stocks.size)
+                if (stocks[i].id == stock.id) {
+                    stocks[i] = stock
+                    break
+                }
+        }
     }
 
 }
