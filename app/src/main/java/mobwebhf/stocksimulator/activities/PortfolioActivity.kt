@@ -1,4 +1,4 @@
-package mobwebhf.stocksimulator
+package mobwebhf.stocksimulator.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import mobwebhf.stocksimulator.R
 import mobwebhf.stocksimulator.adapters.PortfolioAdapter
 import mobwebhf.stocksimulator.data.AppDatabase
 import mobwebhf.stocksimulator.data.PortfolioData

@@ -6,10 +6,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import mobwebhf.stocksimulator.R
-import mobwebhf.stocksimulator.StockActivity
 import mobwebhf.stocksimulator.data.PortfolioManager
 import mobwebhf.stocksimulator.data.StockData
-import mobwebhf.stocksimulator.fragments.StockDialogFragment
 
 class StockAdapter(val listener: Listener) : RecyclerView.Adapter<StockAdapter.ViewHolder>(), PortfolioManager.Listener {
 

@@ -1,5 +1,6 @@
 package mobwebhf.stocksimulator.data
 
+import mobwebhf.stocksimulator.network.NetworkManager
 import kotlin.concurrent.thread
 
 class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val listener : Listener) {
@@ -59,7 +60,14 @@ class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val 
     }
 
     fun getCurrentPrice(name : String) : Double {
-        return 100.0 //todo network query
+        val response = NetworkManager.getCurrentStockPrice(name).execute()
+        if(response.isSuccessful){
+            return response.body()?.current_price ?: 0.0
+        }
+        else {
+            //todo error handling
+        }
+        return 0.0
     }
 
     fun getCurrentPrices() {
@@ -71,7 +79,20 @@ class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val 
     }
 
     fun getStockNameList() : List<String> {
-        return listOf("stock1", "intel", "amd", "meszaros&meszaros") //todo network query
+        val response = NetworkManager.getStockList().execute()
+        val retlist = mutableListOf<String>()
+        if(response.isSuccessful){
+            val elementlist = response.body()
+            if(elementlist != null){
+                for(element in elementlist)
+                    retlist.add(element.symbol)
+            }
+        }
+        else{
+            //todo error handling
+            return listOf("No stock could be loaded")
+        }
+        return retlist
     }
 
     fun getBalance() : Double {

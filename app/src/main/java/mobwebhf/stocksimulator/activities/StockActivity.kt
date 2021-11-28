@@ -1,11 +1,11 @@
-package mobwebhf.stocksimulator
+package mobwebhf.stocksimulator.activities
 
-import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import mobwebhf.stocksimulator.R
 import mobwebhf.stocksimulator.adapters.StockAdapter
 import mobwebhf.stocksimulator.data.AppDatabase
 import mobwebhf.stocksimulator.data.PortfolioData
@@ -13,7 +13,6 @@ import mobwebhf.stocksimulator.data.PortfolioManager
 import mobwebhf.stocksimulator.data.StockData
 import mobwebhf.stocksimulator.databinding.StocksBinding
 import mobwebhf.stocksimulator.fragments.StockDialogFragment
-import kotlin.concurrent.thread
 
 class StockActivity() : AppCompatActivity(), StockAdapter.Listener{
 
