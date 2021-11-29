@@ -8,10 +8,18 @@ import androidx.recyclerview.widget.RecyclerView
 import mobwebhf.stocksimulator.R
 import mobwebhf.stocksimulator.data.PortfolioManager
 import mobwebhf.stocksimulator.data.StockData
+import kotlin.concurrent.thread
 
 class StockAdapter(val listener: Listener) : RecyclerView.Adapter<StockAdapter.ViewHolder>(), PortfolioManager.Listener {
 
-    private val stocks = mutableListOf<StockData>()
+    private var stocks = mutableListOf<StockData>()
+
+    fun initStocks(portfolioManager: PortfolioManager){
+        thread {
+            stocks = portfolioManager.getStocks().toMutableList()
+            notifyDataSetChanged()
+        }
+    }
 
     class ViewHolder(v : View) : RecyclerView.ViewHolder(v) {
         val stock_name : TextView

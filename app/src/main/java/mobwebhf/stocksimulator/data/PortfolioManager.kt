@@ -62,7 +62,7 @@ class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val 
     fun getCurrentPrice(name : String) : Double {
         val response = NetworkManager.getCurrentStockPrice(name).execute()
         if(response.isSuccessful){
-            return response.body()?.current_price ?: 0.0
+            return response.body()?.c?.toDouble() ?: 0.0
         }
         else {
             //todo error handling
@@ -74,8 +74,17 @@ class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val 
         //todo network query
     }
 
-    fun getHistoricPrices(name : String) : List<Double> {
-        return emptyList() //todo network query
+    fun getHistoricPrices(name : String) : StockHistoryData {
+        val response = NetworkManager.getStockHistory(name).execute()
+        val body = response.body()
+        if(response.isSuccessful && body != null)
+        {
+            return StockHistoryData(body.c, body.h, body.l, body.o)
+        }
+        else{
+            //todo error handling
+            return StockHistoryData(listOf(), listOf(), listOf(), listOf())
+        }
     }
 
     fun getStockNameList() : List<String> {
@@ -97,6 +106,10 @@ class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val 
 
     fun getBalance() : Double {
         return portfolio.money
+    }
+
+    fun getStocks() : List<StockData> {
+        return db.stockDao().getStocks(portfolio.id!!)
     }
 
     interface Listener{

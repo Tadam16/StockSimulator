@@ -17,7 +17,7 @@ import mobwebhf.stocksimulator.fragments.StockDialogFragment
 class StockActivity() : AppCompatActivity(), StockAdapter.Listener{
 
     companion object {
-        val PORTFOLIO_KEY = "StockActivityPortfolioKey"
+        const val PORTFOLIO_KEY = "StockActivityPortfolioKey"
     }
 
     private lateinit var binding : StocksBinding
@@ -32,6 +32,7 @@ class StockActivity() : AppCompatActivity(), StockAdapter.Listener{
         database = AppDatabase.getInstance(applicationContext)
         binding = StocksBinding.inflate(layoutInflater)
 
+        adapter.initStocks(PortfolioManager(portfolio,database,adapter))
         binding.stockList.layoutManager = LinearLayoutManager(this)
         binding.stockList.adapter = adapter
         setContentView(binding.root)

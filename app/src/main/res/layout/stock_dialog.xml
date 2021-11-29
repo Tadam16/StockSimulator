@@ -22,11 +22,13 @@
         android:textAlignment="center"
         app:layout_constraintTop_toBottomOf="@+id/stock_input" />
 
-    <com.github.mikephil.charting.charts.LineChart
+    <com.github.mikephil.charting.charts.CandleStickChart
         android:id="@+id/stock_dialog_history_chart"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/stockdialog_price" />
 
     <LinearLayout

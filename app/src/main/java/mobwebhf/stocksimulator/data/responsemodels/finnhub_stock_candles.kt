@@ -1,11 +1,11 @@
 package mobwebhf.stocksimulator.data.responsemodels
 
 data class finnhub_stock_candles (
-    val close_prices : List<Double>,
-    val high_prices : List<Double>,
-    val low_prices : List<Double>,
-    val open_prices : List<Double>,
-    val status : String,
-    val timestamps : List<Long>,
-    val volumes : List<Double>
+    val c : List<Double>,
+    val h : List<Double>,
+    val l : List<Double>,
+    val o : List<Double>,
+    val s : String,
+    val t : List<Long>,
+    val v : List<Double>
 )
