@@ -3,6 +3,7 @@ package mobwebhf.stocksimulator.fragments
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,7 +39,7 @@ class StockDialogFragment(
     private var balance : Double = 0.0
     private var currentQuantity : Double = 0.0
     private var currentPrice : Double = 0.0
-    private lateinit var PriceHistory : StockHistoryData
+    private var PriceHistory : StockHistoryData? = null
     private lateinit var StockList : List<String>
 
     override fun onCreateView(
@@ -53,7 +54,10 @@ class StockDialogFragment(
 
         thread{
             balance = manager.getBalance()
-            StockList = manager.getStockNameList()
+            if(stockname == null)
+                StockList = manager.getStockNameList()
+            else
+                StockList = mutableListOf()
             loadStockData()
         }
 
@@ -126,24 +130,37 @@ class StockDialogFragment(
             }
         }
 
-        val entries = mutableListOf<CandleEntry>()
-        for(i in PriceHistory.close.indices){
-            entries.add(CandleEntry(i.toFloat(),
-                PriceHistory.high[i].toFloat(),
-                PriceHistory.low[i].toFloat(),
-                PriceHistory.open[i].toFloat(),
-                PriceHistory.close[i].toFloat()))
-        }
+        if(PriceHistory != null) {
+            val entries = mutableListOf<CandleEntry>()
+            for (i in PriceHistory!!.close.indices) {
+                entries.add(
+                    CandleEntry(
+                        i.toFloat(),
+                        PriceHistory!!.high[i].toFloat(),
+                        PriceHistory!!.low[i].toFloat(),
+                        PriceHistory!!.open[i].toFloat(),
+                        PriceHistory!!.close[i].toFloat()
+                    )
+                )
+            }
 
-        val set = CandleDataSet(entries, "Dataset")
-        set.color = Color.rgb(80,80,80)
-        set.shadowColor = Color.DKGRAY
-        set.shadowWidth = 0.8f
-        set.decreasingColor = Color.RED
-        set.increasingColor = Color.GREEN
-        set.neutralColor = Color.DKGRAY
-        binding.stockDialogHistoryChart.data = CandleData(set)
-        binding.stockDialogHistoryChart.invalidate()
+            val set = CandleDataSet(entries, "Dataset")
+            set.color = Color.rgb(80, 80, 80)
+            set.shadowColor = Color.DKGRAY
+            set.shadowWidth = 0.8f
+            set.decreasingColor = Color.RED
+            set.decreasingPaintStyle = Paint.Style.FILL
+            set.increasingColor = Color.GREEN
+            set.increasingPaintStyle = Paint.Style.FILL
+            set.neutralColor = Color.DKGRAY
+            binding.stockDialogHistoryChart.data = CandleData(set)
+            binding.stockDialogHistoryChart.xAxis.setDrawGridLines(false)
+            binding.stockDialogHistoryChart.xAxis.setDrawLabels(false)
+            binding.stockDialogHistoryChart.axisLeft.setDrawLabels(false)
+            binding.stockDialogHistoryChart.legend.isEnabled = false
+            binding.stockDialogHistoryChart.description.isEnabled = false
+            binding.stockDialogHistoryChart.invalidate()
+        }
 
         binding.stockInput.setAdapter(ArrayAdapter(requireActivity().applicationContext, R.layout.stock_autocomplete_list_element,StockList))
         binding.stockInput.setOnItemClickListener { adapterView, view, i, l -> binding.stockInput.performValidation()} //todo completion handling
@@ -166,7 +183,7 @@ class StockDialogFragment(
         binding.stockDialogSellButton.isEnabled = quantity <= currentQuantity && quantity > 0
         binding.stockDialogBuyButton.isEnabled = transactionValue <= balance && quantity > 0
         binding.stockDialogTransactionValue.text =
-            getString(R.string.stock_dialogtransaction_value, quantity.toString())
+            getString(R.string.stock_dialogtransaction_value, transactionValue.toString())
     }
 
 }

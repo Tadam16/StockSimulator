@@ -47,7 +47,7 @@ class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val 
                 db.stockDao().removeStock(stock)
                 listener.stockDestroyed(stock)
             }
-            portfolio.money -= transvalue
+            portfolio.money += transvalue
             db.portfolioDao().updatePortfolio(portfolio)
         }
     }
@@ -79,7 +79,7 @@ class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val 
         val body = response.body()
         if(response.isSuccessful && body != null)
         {
-            return StockHistoryData(body.c, body.h, body.l, body.o)
+            return StockHistoryData(body.c, body.o, body.l, body.h)
         }
         else{
             //todo error handling
