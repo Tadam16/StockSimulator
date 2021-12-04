@@ -52,11 +52,15 @@ class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val 
         }
     }
 
-    fun getQuantity(name : String) : Double {
-        val stocks = db.stockDao().getStock(portfolio.id!!, name)
-        if(stocks.isEmpty())
-            return 0.0
-        return stocks[0].quantity
+    fun getQuantity(name : String, callback : (quantity : Double) -> Unit) {
+        thread {
+            var retval = 0.0
+            val stocks = db.stockDao().getStock(portfolio.id!!, name)
+            if (!stocks.isEmpty()) {
+                retval = stocks[0].quantity
+            }
+            callback(retval)
+        }
     }
 
     fun getCurrentPrice(name : String) : Double {

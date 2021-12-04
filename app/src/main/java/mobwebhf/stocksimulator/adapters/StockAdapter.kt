@@ -83,6 +83,7 @@ class StockAdapter(val listener: Listener) : RecyclerView.Adapter<StockAdapter.V
             for (i in 0 until stocks.size)
                 if (stocks[i].id == stock.id) {
                     stocks[i] = stock
+                    notifyItemChanged(i)
                     break
                 }
         }
