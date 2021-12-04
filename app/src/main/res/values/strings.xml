@@ -16,4 +16,8 @@
     <string name="stock_dialog_balance">Balance: %1$s$</string>
     <string name="portfolios_title">Portfolios</string>
     <string name="stocks_title">%1$s portfolio</string>
+    <string name="portfolio_value">Value:</string>
+    <string name="portfolio_profit">Profit:</string>
+    <string name="portfolio_balance">Balance:</string>
+    <string name="name">Name:</string>
 </resources>

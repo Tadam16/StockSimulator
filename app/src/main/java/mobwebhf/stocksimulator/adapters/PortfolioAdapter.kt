@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import mobwebhf.stocksimulator.R
@@ -16,7 +17,7 @@ class PortfolioAdapter(val listener : Listener) : RecyclerView.Adapter<Portfolio
         val value : TextView
         val profit : TextView
         val money : TextView
-        val delete : Button
+        val delete : ImageButton
         val root : View
 
         init {
