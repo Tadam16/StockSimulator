@@ -51,8 +51,9 @@ class PortfolioAdapter(val listener : Listener) : RecyclerView.Adapter<Portfolio
         holder.profit.text = PortfolioManager.df.format(data.profit)
         holder.money.text = PortfolioManager.df.format(data.money)
         holder.delete.setOnClickListener {
-            portfoliolist.removeAt(position)
-            notifyItemRemoved(position)
+            val idx = portfoliolist.indexOf(data)
+            portfoliolist.removeAt(idx)
+            notifyItemRemoved(idx)
             listener.itemRemoved(data)
         }
         holder.root.setOnClickListener {

@@ -40,6 +40,11 @@ class PortfolioActivity : AppCompatActivity(), PortfolioAdapter.Listener, Portfo
         supportActionBar?.title = getString(R.string.portfolios_title)
     }
 
+    override fun onStart() {
+        super.onStart()
+        adapter.notifyDataSetChanged()
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val dialog = PortfolioDialogFragment(this)
         dialog.show(supportFragmentManager, null)

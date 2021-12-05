@@ -4,7 +4,7 @@ import mobwebhf.stocksimulator.network.NetworkManager
 import java.text.DecimalFormat
 import kotlin.concurrent.thread
 
-class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val listener : Listener) {
+class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val listener : Listener? = null) {
 
     companion object{
         val df = DecimalFormat("#.##")
@@ -18,17 +18,17 @@ class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val 
             if (stocks.isEmpty()) {
                 stock = StockData(null, portfolio.id!!, name, price, quantity, transvalue)
                 stock.id = db.stockDao().addStock(stock)
-                listener.stockCreated(stock)
+                listener?.stockCreated(stock)
             } else {
                 stock = stocks[0]
                 stock.price = price
                 stock.spent += transvalue
                 stock.quantity += quantity
                 db.stockDao().updateStock(stock)
-                listener.stockUpdated(stock)
+                listener?.stockUpdated(stock)
             }
             portfolio.money -= transvalue
-            db.portfolioDao().updatePortfolio(portfolio)
+            UpdatePortfolio()
         }
     }
 
@@ -36,22 +36,21 @@ class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val 
         thread {
             val stocks = db.stockDao().getStock(portfolio.id!!, name)
             val transvalue = price * quantity
-            if (stocks.isEmpty()) {
-                //todo error
+            if (stocks.isNotEmpty()) {
+                val stock = stocks[0]
+                stock.price = price
+                stock.quantity -= quantity
+                stock.spent -= transvalue
+                if (stock.quantity > 0.01) {
+                    db.stockDao().updateStock(stock)
+                    listener?.stockUpdated(stock)
+                } else {
+                    db.stockDao().removeStock(stock)
+                    listener?.stockDestroyed(stock)
+                }
+                portfolio.money += transvalue
+                UpdatePortfolio()
             }
-            val stock = stocks[0]
-            stock.price = price
-            stock.quantity -= quantity
-            stock.spent -= transvalue
-            if (stock.quantity > 0.01) {
-                db.stockDao().updateStock(stock)
-                listener.stockUpdated(stock)
-            } else {
-                db.stockDao().removeStock(stock)
-                listener.stockDestroyed(stock)
-            }
-            portfolio.money += transvalue
-            db.portfolioDao().updatePortfolio(portfolio)
         }
     }
 
@@ -74,12 +73,31 @@ class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val 
         return 0.0
     }
 
-    fun getCurrentPrices() {
-        thread {
-            val names = db.stockDao().getStockNames()
-            for(name in names){
-                val price = getCurrentPrice(name)
-            }//todo update logic
+    fun UpdateStocks() {
+        val names = db.stockDao().getStockNames()
+        for(name in names){
+            val price = getCurrentPrice(name)
+            for(stock in db.stockDao().getStocksWithSameSymbol(name)) {
+                stock.price = price
+                db.stockDao().updateStock(stock)
+                listener?.stockUpdated(stock)
+            }
+        }
+        UpdatePortfolios()
+    }
+
+    fun UpdatePortfolio(portfolio : PortfolioData = this.portfolio){
+        var value = portfolio.money
+        for(stock in db.stockDao().getStocks(portfolio.id!!)){
+            value += stock.value
+        }
+        portfolio.value = value
+        db.portfolioDao().updatePortfolio(portfolio)
+    }
+
+    fun UpdatePortfolios() {
+        for(portfolio in db.portfolioDao().getPortfolios()){
+            UpdatePortfolio(portfolio)
         }
     }
 
@@ -96,7 +114,7 @@ class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val 
         }
     }
 
-    fun getStockNameList(callback : (List<String>) -> Unit) {
+    fun getStockNameList() : List<String> {
         val response = NetworkManager.getStockList().execute()
         val retlist = mutableListOf<String>()
         if(response.isSuccessful){
@@ -109,7 +127,7 @@ class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val 
         else{
             //todo error handling
         }
-        callback(retlist)
+        return retlist
     }
 
     fun getBalance() : Double {

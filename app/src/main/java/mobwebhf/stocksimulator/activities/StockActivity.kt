@@ -13,6 +13,7 @@ import mobwebhf.stocksimulator.data.PortfolioManager
 import mobwebhf.stocksimulator.data.StockData
 import mobwebhf.stocksimulator.databinding.StocksBinding
 import mobwebhf.stocksimulator.fragments.StockDialogFragment
+import kotlin.concurrent.thread
 
 class StockActivity() : AppCompatActivity(), StockAdapter.Listener{
 
@@ -47,7 +48,9 @@ class StockActivity() : AppCompatActivity(), StockAdapter.Listener{
                 dialog.show(supportFragmentManager, null)
             }
             R.id.update_stock_button -> {
-                PortfolioManager(portfolio, database, adapter).getCurrentPrices()
+                thread {
+                    PortfolioManager(portfolio, database, adapter).UpdateStocks()
+                }
             }
         }
         return true

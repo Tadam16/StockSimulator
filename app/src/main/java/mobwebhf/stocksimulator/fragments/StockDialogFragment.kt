@@ -57,8 +57,16 @@ class StockDialogFragment(
             getString(R.string.stock_dialog_balance, PortfolioManager.df.format(manager.getBalance()))
 
         if(stockname == ""){
-            thread {
-                manager.getStockNameList(::stockNamesLoaded)
+            try {
+                thread {
+                    val list = manager.getStockNameList()
+                    requireActivity().runOnUiThread {
+                        stockNamesLoaded(list)
+                    }
+                }
+            }
+            catch (e : Throwable){
+                Log.e("debug", e.printStackTrace().toString())
             }
         }else{
             stockSelected()

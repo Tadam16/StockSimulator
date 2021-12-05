@@ -8,6 +8,9 @@ interface StockDao {
     @Query("SELECT DISTINCT stockname from stock")
     fun getStockNames() : List<String>
 
+    @Query("SELECT * FROM stock WHERE stockname = :symbol")
+    fun getStocksWithSameSymbol(symbol : String) : List<StockData>
+
     @Query("SELECT * FROM stock WHERE portfoliokey = :portfolio_key")
     fun getStocks(portfolio_key : Long) : List<StockData>
 
