@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import mobwebhf.stocksimulator.R
 import mobwebhf.stocksimulator.data.PortfolioData
 import mobwebhf.stocksimulator.databinding.PortfolioDialogBinding
 
@@ -17,11 +19,22 @@ class PortfolioDialogFragment(val listener: Listener) : DialogFragment() {
 
         binding = PortfolioDialogBinding.inflate(inflater)
         binding.buttonOk.setOnClickListener{
-            listener.addPortfolio(PortfolioData(null,binding.portfolioDialogName.text.toString(),
-                binding.portfolioDialogCapital.text.toString().toDouble(),
-                binding.portfolioDialogCapital.text.toString().toDouble(),
-                binding.portfolioDialogCapital.text.toString().toDouble()))
-            dismiss()
+            val capital =  binding.portfolioDialogCapital.text.toString()
+            val name =  binding.portfolioDialogName.text.toString()
+            if(capital.isNotEmpty() && name.isNotEmpty()) {
+                listener.addPortfolio(
+                    PortfolioData(
+                        null, name,
+                        capital.toDouble(),
+                        capital.toDouble(),
+                        capital.toDouble()
+                    )
+                )
+                dismiss()
+            }
+            else{
+                Toast.makeText(context, getString(R.string.portfolio_add_error_toast), Toast.LENGTH_LONG).show()
+            }
         }
         binding.buttonCancel.setOnClickListener {
             dismiss()

@@ -86,7 +86,7 @@ class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val 
         UpdatePortfolios()
     }
 
-    fun UpdatePortfolio(portfolio : PortfolioData = this.portfolio){
+    private fun UpdatePortfolio(portfolio : PortfolioData = this.portfolio){
         var value = portfolio.money
         for(stock in db.stockDao().getStocks(portfolio.id!!)){
             value += stock.value
@@ -95,7 +95,7 @@ class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val 
         db.portfolioDao().updatePortfolio(portfolio)
     }
 
-    fun UpdatePortfolios() {
+    private fun UpdatePortfolios() {
         for(portfolio in db.portfolioDao().getPortfolios()){
             UpdatePortfolio(portfolio)
         }

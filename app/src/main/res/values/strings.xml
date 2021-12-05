@@ -26,4 +26,5 @@
     <string name="stock_value">Value:</string>
     <string name="stock_price">Price:</string>
     <string name="stock_profit">Profit:</string>
+    <string name="portfolio_add_error_toast">Specify portfolio name and initial capital!</string>
 </resources>

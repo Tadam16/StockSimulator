@@ -1,12 +1,17 @@
 package mobwebhf.stocksimulator.activities
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.BroadcastReceiver
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import mobwebhf.stocksimulator.R
+import mobwebhf.stocksimulator.UpdateReceiver
 import mobwebhf.stocksimulator.adapters.PortfolioAdapter
 import mobwebhf.stocksimulator.data.AppDatabase
 import mobwebhf.stocksimulator.data.PortfolioData
@@ -23,6 +28,29 @@ class PortfolioActivity : AppCompatActivity(), PortfolioAdapter.Listener, Portfo
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = PortfoliosBinding.inflate(layoutInflater)
+
+        /*val filter = IntentFilter("mobwebhf.stocksimulator.updatestocks")
+        registerReceiver(UpdateReceiver(), filter)
+        sendBroadcast(Intent("mobwebhf.stocksimulator.updatestocks"))
+        if (PendingIntent.getBroadcast(this, 0,
+                Intent("mobewbhf.stocksimulator.updatestocks"),
+                PendingIntent.FLAG_NO_CREATE) == null) {
+            val intent = Intent("mobewbhf.stocksimulator.updatestocks")
+            val pending = PendingIntent.getBroadcast(this, 0, intent, 0)
+            val alarm = this.getSystemService(ALARM_SERVICE) as AlarmManager
+            val interval: Long = 3600
+            alarm.setRepeating(
+                AlarmManager.RTC_WAKEUP,
+                System.currentTimeMillis() + interval,
+                interval,
+                pending
+            )
+
+            val filter = IntentFilter("mobwebhf.stocksimulator.updatestocks")
+            registerReceiver(object : BroadcastReceiver {
+
+                                                        }, filter)
+        }*/
 
         adapter = PortfolioAdapter(this)
         binding.portfolioList.layoutManager = LinearLayoutManager(this)
