@@ -1,8 +1,9 @@
-package mobwebhf.stocksimulator
+package mobwebhf.stocksimulator.receivers
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.widget.Toast
 import mobwebhf.stocksimulator.data.AppDatabase
 import mobwebhf.stocksimulator.data.PortfolioData
@@ -18,6 +19,6 @@ class UpdateReceiver : BroadcastReceiver() {
                 AppDatabase.getInstance(context)
             ).UpdateStocks()
         }
-        Toast.makeText(context, "run", Toast.LENGTH_SHORT).show()
+        Log.i("mobwebhf", "receiver called")
     }
 }

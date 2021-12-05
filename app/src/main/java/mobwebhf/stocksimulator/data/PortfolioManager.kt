@@ -116,7 +116,7 @@ class PortfolioManager(private val portfolio : PortfolioData, private val db : A
     fun UpdateStocks() {
         val names = db.stockDao().getStockNames()
         for(name in names){
-            val price = getCurrentPrice(name)
+            val price = pollStockPriceUntilSuccess(name)
             for(stock in db.stockDao().getStocksWithSameSymbol(name)) {
                 stock.price = price
                 db.stockDao().updateStock(stock)
@@ -124,6 +124,14 @@ class PortfolioManager(private val portfolio : PortfolioData, private val db : A
             }
         }
         UpdatePortfolios()
+    }
+
+    private fun pollStockPriceUntilSuccess(name : String) : Double {
+        return try{
+            getCurrentPrice(name)
+        } catch (e : Exception){
+            getCurrentPrice(name)
+        }
     }
 
     private fun UpdatePortfolio(portfolio : PortfolioData = this.portfolio){

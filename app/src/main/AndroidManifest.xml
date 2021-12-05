@@ -3,6 +3,7 @@
     package="mobwebhf.stocksimulator">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
@@ -13,13 +14,18 @@
         android:theme="@style/Theme.StockSimulator">
 
         <receiver
-            android:name=".UpdateReceiver"
+            android:name=".receivers.BootReceiver"
             android:enabled="true"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
-                <action android:name="mobewbhf.stocksimulator.updatestocks"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+        <receiver
+            android:name=".receivers.UpdateReceiver"
+            android:enabled="true"
+            android:exported="true" />
 
         <activity
             android:name=".activities.PortfolioActivity"
