@@ -1,31 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/stock_symbol_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/stock_symbol"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/stock_name"
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/stock_symbol_text"
+        app:layout_constraintBaseline_toBaselineOf="@id/stock_symbol_text"/>
+
+    <TextView
+        android:id="@+id/stock_quantity_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/stock_quantity"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/stock_symbol_text"/>
 
     <TextView
         android:id="@+id/stock_quantity"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/stock_quantity_text"
+        app:layout_constraintBaseline_toBaselineOf="@id/stock_quantity_text"/>
+
+    <TextView
+        android:id="@+id/stock_value_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/stock_value"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/stock_quantity_text"/>
 
     <TextView
         android:id="@+id/stock_value"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/stock_value_text"
+        app:layout_constraintBaseline_toBaselineOf="@id/stock_value_text"/>
+
+    <TextView
+        android:id="@+id/stock_price_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/stock_price"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/stock_value_text"/>
 
     <TextView
         android:id="@+id/stock_price"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/stock_price_text"
+        app:layout_constraintBaseline_toBaselineOf="@id/stock_price_text"/>
+
+    <TextView
+        android:id="@+id/stock_profit_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/stock_profit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/stock_price_text" />
 
     <TextView
         android:id="@+id/stock_profit"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/stock_profit_text"
+        app:layout_constraintBaseline_toBaselineOf="@id/stock_profit_text"/>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

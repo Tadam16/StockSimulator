@@ -9,8 +9,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import mobwebhf.stocksimulator.R
 import mobwebhf.stocksimulator.data.PortfolioData
+import mobwebhf.stocksimulator.data.PortfolioManager
 
 class PortfolioAdapter(val listener : Listener) : RecyclerView.Adapter<PortfolioAdapter.ViewHolder>() {
+
+
 
     class ViewHolder(v : View) : RecyclerView.ViewHolder(v) {
         val name : TextView
@@ -44,9 +47,9 @@ class PortfolioAdapter(val listener : Listener) : RecyclerView.Adapter<Portfolio
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val data = portfoliolist[position]
         holder.name.text = data.name
-        holder.value.text = data.value.toString()
-        holder.profit.text = data.profit.toString()
-        holder.money.text = data.money.toString()
+        holder.value.text = PortfolioManager.df.format(data.value)
+        holder.profit.text = PortfolioManager.df.format(data.profit)
+        holder.money.text = PortfolioManager.df.format(data.money)
         holder.delete.setOnClickListener {
             portfoliolist.removeAt(position)
             notifyItemRemoved(position)

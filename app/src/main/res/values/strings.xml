@@ -21,4 +21,9 @@
     <string name="portfolio_balance">Balance:</string>
     <string name="name">Name:</string>
     <string name="update_stocks">Update Stocks</string>
+    <string name="stock_symbol">Symbol:</string>
+    <string name="stock_quantity">Quantity:</string>
+    <string name="stock_value">Value:</string>
+    <string name="stock_price">Price:</string>
+    <string name="stock_profit">Profit:</string>
 </resources>

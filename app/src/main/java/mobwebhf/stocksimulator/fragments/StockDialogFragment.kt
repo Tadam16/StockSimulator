@@ -54,7 +54,7 @@ class StockDialogFragment(
         lockBuy()
 
         binding.stockDialogBalance.text =
-            getString(R.string.stock_dialog_balance, manager.getBalance().toString())
+            getString(R.string.stock_dialog_balance, PortfolioManager.df.format(manager.getBalance()))
 
         if(stockname == ""){
             thread {
@@ -166,7 +166,7 @@ class StockDialogFragment(
         try {
             requireActivity().runOnUiThread {
                 binding.stockdialogPrice.text =
-                    getString(R.string.price_string, price.toString(), currentQuantity.toString())
+                    getString(R.string.price_string, PortfolioManager.df.format(price), PortfolioManager.df.format(currentQuantity))
 
                 binding.stockDialogQuantity.addTextChangedListener {
                     validateOptions(price, currentQuantity)

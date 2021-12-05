@@ -1,10 +1,14 @@
 package mobwebhf.stocksimulator.data
 
 import mobwebhf.stocksimulator.network.NetworkManager
+import java.text.DecimalFormat
 import kotlin.concurrent.thread
 
 class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val listener : Listener) {
 
+    companion object{
+        val df = DecimalFormat("#.##")
+    }
 
     fun BuyStock(name : String, quantity : Double, price : Double) {
         thread {
@@ -39,7 +43,7 @@ class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val 
             stock.price = price
             stock.quantity -= quantity
             stock.spent -= transvalue
-            if (stock.quantity > 0) {
+            if (stock.quantity > 0.01) {
                 db.stockDao().updateStock(stock)
                 listener.stockUpdated(stock)
             } else {

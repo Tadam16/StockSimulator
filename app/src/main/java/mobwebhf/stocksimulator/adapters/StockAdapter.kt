@@ -47,10 +47,10 @@ class StockAdapter(val listener: Listener) : RecyclerView.Adapter<StockAdapter.V
     override fun onBindViewHolder(holder: StockAdapter.ViewHolder, position: Int) {
         val data = stocks[position]
         holder.stock_name.text = data.name
-        holder.stock_price.text = data.price.toString()
-        holder.stock_profit.text =data.profit.toString()
-        holder.stock_quantity.text = data.quantity.toString()
-        holder.stock_value.text = data.value.toString()
+        holder.stock_price.text = PortfolioManager.df.format(data.price)
+        holder.stock_profit.text = PortfolioManager.df.format(data.profit)
+        holder.stock_quantity.text = PortfolioManager.df.format(data.quantity)
+        holder.stock_value.text = PortfolioManager.df.format(data.value)
         holder.stock_root.setOnClickListener {
             listener.stockSelected(data)
         }
