@@ -3,6 +3,7 @@ package mobwebhf.stocksimulator.fragments
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
+import android.text.Layout
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -60,7 +61,7 @@ class StockDialogFragment(
             getString(R.string.stock_dialog_balance, PortfolioManager.df.format(manager.getBalance()))
         binding.stockdialogPrice.text = getString(R.string.price_string, "-", "-")
         binding.stockDialogTransactionValue.text = getString(R.string.stock_dialogtransaction_value, "-")
-        binding.stockDialogHistoryChart.visibility = View.GONE
+        binding.stockDialogHistoryChart.visibility = View.INVISIBLE
 
         if(stockname == ""){
             thread {
@@ -72,14 +73,17 @@ class StockDialogFragment(
                 }
                 catch (e : IllegalStateException){}//not attached to activity, nothing to do.
                 catch (e : Exception) {
-                    requireActivity().runOnUiThread {
-                        Toast.makeText(
-                            context,
-                            "Stock names could not be loaded, retrying...",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        initView()
+                    try {
+                        requireActivity().runOnUiThread {
+                            Toast.makeText(
+                                context,
+                                "Stock names could not be loaded, retrying...",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            initView()
+                        }
                     }
+                    catch (e : IllegalStateException){}//not attached to activity, nothing to do.
                 }
             }
         }else{
@@ -114,10 +118,16 @@ class StockDialogFragment(
             }
             catch (e : IllegalStateException){}//not attached to activity, nothing to do.
             catch (e : Exception){
-                requireActivity().runOnUiThread{
-                    Toast.makeText(context, "Stock data could not be loaded, retrying...", Toast.LENGTH_SHORT).show()
-                    stockSelected()
-                }
+                try {
+                    requireActivity().runOnUiThread {
+                        Toast.makeText(
+                            context,
+                            "Stock data could not be loaded, retrying...",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        stockSelected()
+                    }
+                }catch (e : IllegalStateException){}//not attached to activity, nothing to do.
             }
         }
         thread {
@@ -129,14 +139,16 @@ class StockDialogFragment(
             }
             catch (e : IllegalStateException){}//not attached to activity, nothing to do.
             catch (e : Throwable){
-                requireActivity().runOnUiThread {
-                    Toast.makeText(
-                        context,
-                        "Stock history could not be loaded, retrying...",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    stockSelected()
-                }
+                try {
+                    requireActivity().runOnUiThread {
+                        Toast.makeText(
+                            context,
+                            "Stock history could not be loaded, retrying...",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        stockSelected()
+                    }
+                } catch (e : IllegalStateException){}//not attached to activity, nothing to do.
             }
         }
     }
@@ -213,13 +225,13 @@ class StockDialogFragment(
 
         binding.stockDialogBuyButton.setOnClickListener {
             val quantity = binding.stockDialogQuantity.text.toString().toDouble()
-            manager.BuyStock(stockname!!, quantity, price)
+            manager.BuyStock(stockname, quantity, price)
             dismiss()
         }
 
         binding.stockDialogSellButton.setOnClickListener {
             val quantity = binding.stockDialogQuantity.text.toString().toDouble()
-            manager.SellStock(stockname!!, quantity, price)
+            manager.SellStock(stockname, quantity, price)
             dismiss()
         }
         unlockBuy()

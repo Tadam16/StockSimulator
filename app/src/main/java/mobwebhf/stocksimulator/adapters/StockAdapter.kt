@@ -61,12 +61,14 @@ class StockAdapter(val listener: Listener) : RecyclerView.Adapter<StockAdapter.V
     interface Listener {
         fun stockSelected(stock : StockData)
         fun runOnUiThread(r : Runnable)
+        fun PortfolioChanged()
     }
 
     override fun stockCreated(stock: StockData) {
         listener.runOnUiThread {
             stocks.add(stock)
             notifyItemInserted(stocks.size - 1)
+            listener.PortfolioChanged()
         }
     }
 
@@ -78,6 +80,7 @@ class StockAdapter(val listener: Listener) : RecyclerView.Adapter<StockAdapter.V
                     notifyItemRemoved(idx)
                     break
                 }
+            listener.PortfolioChanged()
         }
     }
 
@@ -89,6 +92,7 @@ class StockAdapter(val listener: Listener) : RecyclerView.Adapter<StockAdapter.V
                     notifyItemChanged(i)
                     break
                 }
+            listener.PortfolioChanged()
         }
     }
 

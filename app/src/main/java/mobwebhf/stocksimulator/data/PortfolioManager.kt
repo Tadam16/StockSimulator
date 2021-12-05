@@ -4,7 +4,7 @@ import mobwebhf.stocksimulator.network.NetworkManager
 import java.text.DecimalFormat
 import kotlin.concurrent.thread
 
-class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val listener : Listener? = null) {
+class PortfolioManager(private val portfolio : PortfolioData, private val db : AppDatabase, private val listener : Listener? = null) {
 
     companion object{
         val df = DecimalFormat("#.##")
@@ -53,7 +53,7 @@ class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val 
                     db.stockDao().updateStock(stock)
                     listener?.stockUpdated(stock)
                 } else {
-                    transvalue = price * stock.quantity
+                    transvalue += price * stock.quantity
                     db.stockDao().removeStock(stock)
                     listener?.stockDestroyed(stock)
                 }
@@ -82,7 +82,7 @@ class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val 
     fun getCurrentPrice(name : String) : Double {
         val response = NetworkManager.getCurrentStockPrice(name).execute()
         if (response.isSuccessful) {
-            return response.body()?.c?.toDouble() ?: 0.0
+            return response.body()?.c ?: 0.0
         } else {
             throw UnsuccesfulRequestException()
         }

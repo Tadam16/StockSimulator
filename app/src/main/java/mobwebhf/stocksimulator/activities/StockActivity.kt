@@ -75,4 +75,8 @@ class StockActivity() : AppCompatActivity(), StockAdapter.Listener{
         dialog.show(supportFragmentManager, null)
     }
 
+    override fun PortfolioChanged() {
+        UpdatePortfolioData()
+    }
+
 }

@@ -21,6 +21,7 @@
         android:layout_height="wrap_content"
         android:text="@string/price_string"
         android:textAlignment="center"
+        android:gravity="center"
         app:layout_constraintTop_toBottomOf="@+id/stock_input" />
 
     <com.github.mikephil.charting.charts.CandleStickChart

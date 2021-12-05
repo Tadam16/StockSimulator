@@ -12,7 +12,6 @@ class StockData(
     @ColumnInfo(name= "stockprice") var price: Double,
     @ColumnInfo(name= "stockquantity") var quantity: Double,
     @ColumnInfo(name= "spent") var spent: Double
-    //TODO store historic data - are we sure we want that?
 ) {
     val value: Double
         get() = price * quantity
