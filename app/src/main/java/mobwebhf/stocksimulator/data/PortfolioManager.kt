@@ -10,6 +10,14 @@ class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val 
         val df = DecimalFormat("#.##")
     }
 
+    interface Listener{
+        fun stockCreated(stock : StockData)
+        fun stockDestroyed(stock : StockData)
+        fun stockUpdated(stock : StockData)
+    }
+
+    class UnsuccesfulRequestException : Exception()
+
     fun BuyStock(name : String, quantity : Double, price : Double) {
         thread {
             val stocks = db.stockDao().getStock(portfolio.id!!, name)
@@ -35,7 +43,7 @@ class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val 
     fun SellStock(name : String, quantity : Double, price : Double) {
         thread {
             val stocks = db.stockDao().getStock(portfolio.id!!, name)
-            val transvalue = price * quantity
+            var transvalue = price * quantity
             if (stocks.isNotEmpty()) {
                 val stock = stocks[0]
                 stock.price = price
@@ -45,6 +53,7 @@ class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val 
                     db.stockDao().updateStock(stock)
                     listener?.stockUpdated(stock)
                 } else {
+                    transvalue = price * stock.quantity
                     db.stockDao().removeStock(stock)
                     listener?.stockDestroyed(stock)
                 }
@@ -62,15 +71,46 @@ class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val 
         return 0.0
     }
 
+    fun getBalance() : Double {
+        return portfolio.money
+    }
+
+    fun getStocks() : List<StockData> {
+        return db.stockDao().getStocks(portfolio.id!!)
+    }
+
     fun getCurrentPrice(name : String) : Double {
         val response = NetworkManager.getCurrentStockPrice(name).execute()
-        if(response.isSuccessful){
+        if (response.isSuccessful) {
             return response.body()?.c?.toDouble() ?: 0.0
+        } else {
+            throw UnsuccesfulRequestException()
         }
-        else {
-            //todo error handling
+    }
+
+    fun getHistoricPrices(name : String) : StockHistoryData {
+        val response = NetworkManager.getStockHistory(name).execute()
+        val body = response.body()
+        if (response.isSuccessful && body != null) {
+            return StockHistoryData(body.c, body.o, body.l, body.h)
+        } else {
+            throw UnsuccesfulRequestException()
         }
-        return 0.0
+    }
+
+    fun getStockNameList() : List<String> {
+        val response = NetworkManager.getStockList().execute()
+        val retlist = mutableListOf<String>()
+        if (response.isSuccessful) {
+            val elementlist = response.body()
+            if (elementlist != null) {
+                for (element in elementlist)
+                    retlist.add(element.symbol)
+            }
+        } else {
+            throw UnsuccesfulRequestException()
+        }
+        return retlist
     }
 
     fun UpdateStocks() {
@@ -99,49 +139,6 @@ class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val 
         for(portfolio in db.portfolioDao().getPortfolios()){
             UpdatePortfolio(portfolio)
         }
-    }
-
-    fun getHistoricPrices(name : String) : StockHistoryData {
-        val response = NetworkManager.getStockHistory(name).execute()
-        val body = response.body()
-        if(response.isSuccessful && body != null)
-        {
-            return StockHistoryData(body.c, body.o, body.l, body.h)
-        }
-        else{
-            //todo error handling
-            return StockHistoryData(listOf(), listOf(), listOf(), listOf())
-        }
-    }
-
-    fun getStockNameList() : List<String> {
-        val response = NetworkManager.getStockList().execute()
-        val retlist = mutableListOf<String>()
-        if(response.isSuccessful){
-            val elementlist = response.body()
-            if(elementlist != null){
-                for(element in elementlist)
-                    retlist.add(element.symbol)
-            }
-        }
-        else{
-            //todo error handling
-        }
-        return retlist
-    }
-
-    fun getBalance() : Double {
-        return portfolio.money
-    }
-
-    fun getStocks() : List<StockData> {
-        return db.stockDao().getStocks(portfolio.id!!)
-    }
-
-    interface Listener{
-        fun stockCreated(stock : StockData)
-        fun stockDestroyed(stock : StockData)
-        fun stockUpdated(stock : StockData)
     }
 
 }

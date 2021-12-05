@@ -58,19 +58,23 @@ class PortfolioActivity : AppCompatActivity(), PortfolioAdapter.Listener, Portfo
         setContentView(binding.root)
 
         database = AppDatabase.getInstance(applicationContext)
-        thread {
-            val list = database.portfolioDao().getPortfolios().toMutableList()
-            runOnUiThread {
-                adapter.updateDataset(list)
-            }
-        }
+        loadPortfolios()
 
         supportActionBar?.title = getString(R.string.portfolios_title)
     }
 
     override fun onStart() {
         super.onStart()
-        adapter.notifyDataSetChanged()
+        loadPortfolios()
+    }
+
+    private fun loadPortfolios(){
+        thread {
+            val list = database.portfolioDao().getPortfolios().toMutableList()
+            runOnUiThread {
+                adapter.updateDataset(list)
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

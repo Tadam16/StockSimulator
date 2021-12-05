@@ -72,9 +72,12 @@ class StockAdapter(val listener: Listener) : RecyclerView.Adapter<StockAdapter.V
 
     override fun stockDestroyed(stock: StockData) {
         listener.runOnUiThread {
-            val idx = stocks.indexOf(stock)
-            stocks.removeAt(idx)
-            notifyItemRemoved(idx)
+            for (idx in 0 until stocks.size)
+                if (stocks[idx].id == stock.id) {
+                    stocks.removeAt(idx)
+                    notifyItemRemoved(idx)
+                    break
+                }
         }
     }
 

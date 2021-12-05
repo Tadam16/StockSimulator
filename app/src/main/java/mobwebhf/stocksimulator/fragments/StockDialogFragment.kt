@@ -17,6 +17,9 @@ import mobwebhf.stocksimulator.R
 import mobwebhf.stocksimulator.data.PortfolioManager
 import mobwebhf.stocksimulator.data.StockHistoryData
 import mobwebhf.stocksimulator.databinding.StockDialogBinding
+import java.lang.Exception
+import java.lang.IllegalStateException
+import java.lang.Thread.sleep
 import kotlin.concurrent.thread
 
 class StockDialogFragment(
@@ -55,18 +58,29 @@ class StockDialogFragment(
 
         binding.stockDialogBalance.text =
             getString(R.string.stock_dialog_balance, PortfolioManager.df.format(manager.getBalance()))
+        binding.stockdialogPrice.text = getString(R.string.price_string, "-", "-")
+        binding.stockDialogTransactionValue.text = getString(R.string.stock_dialogtransaction_value, "-")
+        binding.stockDialogHistoryChart.visibility = View.GONE
 
         if(stockname == ""){
-            try {
-                thread {
+            thread {
+                try {
                     val list = manager.getStockNameList()
                     requireActivity().runOnUiThread {
                         stockNamesLoaded(list)
                     }
                 }
-            }
-            catch (e : Throwable){
-                Log.e("debug", e.printStackTrace().toString())
+                catch (e : IllegalStateException){}//not attached to activity, nothing to do.
+                catch (e : Exception) {
+                    requireActivity().runOnUiThread {
+                        Toast.makeText(
+                            context,
+                            "Stock names could not be loaded, retrying...",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        initView()
+                    }
+                }
             }
         }else{
             stockSelected()
@@ -84,20 +98,46 @@ class StockDialogFragment(
         binding.stockDialogSellButton.isEnabled = quantity <= currentQuantity && quantity > 0
         binding.stockDialogBuyButton.isEnabled = transactionValue <= manager.getBalance() && quantity > 0
         binding.stockDialogTransactionValue.text =
-            getString(R.string.stock_dialogtransaction_value, transactionValue.toString())
+            getString(R.string.stock_dialogtransaction_value, PortfolioManager.df.format(transactionValue))
     }
 
     private fun stockSelected(){
         binding.stockInput.setText(stockname)
         binding.stockInput.isEnabled = false
         thread{
-            val price = manager.getCurrentPrice(stockname)
-            val quantity = manager.getQuantity(stockname)
-            stockDataLoaded(price, quantity)
+            try {
+                val price = manager.getCurrentPrice(stockname)
+                val quantity = manager.getQuantity(stockname)
+                requireActivity().runOnUiThread {
+                    stockDataLoaded(price, quantity)
+                }
+            }
+            catch (e : IllegalStateException){}//not attached to activity, nothing to do.
+            catch (e : Exception){
+                requireActivity().runOnUiThread{
+                    Toast.makeText(context, "Stock data could not be loaded, retrying...", Toast.LENGTH_SHORT).show()
+                    stockSelected()
+                }
+            }
         }
         thread {
-            val history = manager.getHistoricPrices(stockname)
-            stockHistoryLoaded(history)
+            try {
+                val history = manager.getHistoricPrices(stockname)
+                requireActivity().runOnUiThread {
+                    loadChart(history)
+                }
+            }
+            catch (e : IllegalStateException){}//not attached to activity, nothing to do.
+            catch (e : Throwable){
+                requireActivity().runOnUiThread {
+                    Toast.makeText(
+                        context,
+                        "Stock history could not be loaded, retrying...",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    stockSelected()
+                }
+            }
         }
     }
 
@@ -130,84 +170,59 @@ class StockDialogFragment(
         binding.stockDialogHistoryChart.axisLeft.setDrawLabels(false)
         binding.stockDialogHistoryChart.legend.isEnabled = false
         binding.stockDialogHistoryChart.description.isEnabled = false
+        binding.stockDialogHistoryChart.visibility = View.VISIBLE
         binding.stockDialogHistoryChart.invalidate()
     }
 
     fun stockNamesLoaded(stocknames : List<String>){
-        try {
-            requireActivity().runOnUiThread {
-                binding.stockInput.validator = object : AutoCompleteTextView.Validator {
+        binding.stockInput.validator = object : AutoCompleteTextView.Validator {
 
-                    override fun isValid(p0: CharSequence?): Boolean {
-                        val ret = stocknames.contains(p0.toString())
-                        if (ret) {
-                            stockname = p0.toString()
-                            stockSelected()
-                        } else
-                            lockBuy()
-                        return ret
-                    }
+            override fun isValid(p0: CharSequence?): Boolean {
+                val ret = stocknames.contains(p0.toString())
+                if (ret) {
+                    stockname = p0.toString()
+                    stockSelected()
+                } else
+                    lockBuy()
+                return ret
+            }
 
-                    override fun fixText(p0: CharSequence?): CharSequence {
-                        return p0 ?: ""
-                    }
-                }
-
-                binding.stockInput.setAdapter(
-                    ArrayAdapter(
-                        requireActivity().applicationContext,
-                        R.layout.stock_autocomplete_list_element,
-                        stocknames
-                    )
-                )
-                binding.stockInput.setOnItemClickListener { adapterView, view, i, l -> binding.stockInput.performValidation() } //todo completion handling
-
+            override fun fixText(p0: CharSequence?): CharSequence {
+                return p0 ?: ""
             }
         }
-        catch (e : Throwable){
-            Log.e("debug", e.printStackTrace().toString())
-        }
+
+        binding.stockInput.setAdapter(
+            ArrayAdapter(
+                requireActivity().applicationContext,
+                R.layout.stock_autocomplete_list_element,
+                stocknames
+            )
+        )
+        binding.stockInput.setOnItemClickListener { adapterView, view, i, l -> binding.stockInput.performValidation() } //todo completion handling
 
     }
 
     fun stockDataLoaded(price : Double, currentQuantity : Double){
-        try {
-            requireActivity().runOnUiThread {
-                binding.stockdialogPrice.text =
-                    getString(R.string.price_string, PortfolioManager.df.format(price), PortfolioManager.df.format(currentQuantity))
+        binding.stockdialogPrice.text =
+            getString(R.string.price_string, PortfolioManager.df.format(price), PortfolioManager.df.format(currentQuantity))
 
-                binding.stockDialogQuantity.addTextChangedListener {
-                    validateOptions(price, currentQuantity)
-                }
+        binding.stockDialogQuantity.addTextChangedListener {
+            validateOptions(price, currentQuantity)
+        }
 
-                binding.stockDialogBuyButton.setOnClickListener {
-                    val quantity = binding.stockDialogQuantity.text.toString().toDouble()
-                    manager.BuyStock(stockname!!, quantity, price)
-                    dismiss()
-                }
+        binding.stockDialogBuyButton.setOnClickListener {
+            val quantity = binding.stockDialogQuantity.text.toString().toDouble()
+            manager.BuyStock(stockname!!, quantity, price)
+            dismiss()
+        }
 
-                binding.stockDialogSellButton.setOnClickListener {
-                    val quantity = binding.stockDialogQuantity.text.toString().toDouble()
-                    manager.SellStock(stockname!!, quantity, price)
-                    dismiss()
-                }
-                unlockBuy()
-            }
+        binding.stockDialogSellButton.setOnClickListener {
+            val quantity = binding.stockDialogQuantity.text.toString().toDouble()
+            manager.SellStock(stockname!!, quantity, price)
+            dismiss()
         }
-        catch (e : Throwable){
-            Log.e("debug", e.printStackTrace().toString())
-        }
-    }
-
-    fun stockHistoryLoaded(history : StockHistoryData){
-        try {
-            requireActivity().runOnUiThread {
-                loadChart(history)
-            }
-        }
-        catch (e : Throwable){
-            Log.e("debug", e.printStackTrace().toString())
-        }
+        unlockBuy()
     }
 
 }

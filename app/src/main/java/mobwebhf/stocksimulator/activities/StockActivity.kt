@@ -1,5 +1,6 @@
 package mobwebhf.stocksimulator.activities
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -36,9 +37,17 @@ class StockActivity() : AppCompatActivity(), StockAdapter.Listener{
         adapter.initStocks(PortfolioManager(portfolio,database,adapter))
         binding.stockList.layoutManager = LinearLayoutManager(this)
         binding.stockList.adapter = adapter
+        UpdatePortfolioData()
         setContentView(binding.root)
 
         supportActionBar?.title = getString(R.string.stocks_title, portfolio.name)
+    }
+
+    private fun UpdatePortfolioData(){
+        binding.tvStockDialog.text = getString(R.string.tv_stock_dialog,
+            PortfolioManager.df.format(portfolio.value),
+            PortfolioManager.df.format(portfolio.money),
+            PortfolioManager.df.format(portfolio.profit))
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
