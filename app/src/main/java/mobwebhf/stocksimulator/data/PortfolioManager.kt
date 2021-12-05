@@ -26,7 +26,6 @@ class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val 
             portfolio.money -= transvalue
             db.portfolioDao().updatePortfolio(portfolio)
         }
-
     }
 
     fun SellStock(name : String, quantity : Double, price : Double) {
@@ -52,15 +51,12 @@ class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val 
         }
     }
 
-    fun getQuantity(name : String, callback : (quantity : Double) -> Unit) {
-        thread {
-            var retval = 0.0
-            val stocks = db.stockDao().getStock(portfolio.id!!, name)
-            if (!stocks.isEmpty()) {
-                retval = stocks[0].quantity
-            }
-            callback(retval)
+    fun getQuantity(name : String) : Double{
+        val stocks = db.stockDao().getStock(portfolio.id!!, name)
+        if (!stocks.isEmpty()) {
+            return stocks[0].quantity
         }
+        return 0.0
     }
 
     fun getCurrentPrice(name : String) : Double {
@@ -91,7 +87,7 @@ class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val 
         }
     }
 
-    fun getStockNameList() : List<String> {
+    fun getStockNameList(callback : (List<String>) -> Unit) {
         val response = NetworkManager.getStockList().execute()
         val retlist = mutableListOf<String>()
         if(response.isSuccessful){
@@ -103,9 +99,8 @@ class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val 
         }
         else{
             //todo error handling
-            return listOf("No stock could be loaded")
         }
-        return retlist
+        callback(retlist)
     }
 
     fun getBalance() : Double {

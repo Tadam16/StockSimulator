@@ -3,6 +3,7 @@ package mobwebhf.stocksimulator.fragments
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,14 +17,14 @@ import mobwebhf.stocksimulator.R
 import mobwebhf.stocksimulator.data.PortfolioManager
 import mobwebhf.stocksimulator.data.StockHistoryData
 import mobwebhf.stocksimulator.databinding.StockDialogBinding
+import kotlin.concurrent.thread
 
 class StockDialogFragment(
     val manager : PortfolioManager,
-    var stockname : String? = null
+    var stockname : String = ""
 ) : DialogFragment() {
 
     private lateinit var binding: StockDialogBinding
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,6 +56,13 @@ class StockDialogFragment(
         binding.stockDialogBalance.text =
             getString(R.string.stock_dialog_balance, manager.getBalance().toString())
 
+        if(stockname == ""){
+            thread {
+                manager.getStockNameList(::stockNamesLoaded)
+            }
+        }else{
+            stockSelected()
+        }
 
     }
 
@@ -72,8 +80,17 @@ class StockDialogFragment(
     }
 
     private fun stockSelected(){
-        //todo calls to load stock datas
-
+        binding.stockInput.setText(stockname)
+        binding.stockInput.isEnabled = false
+        thread{
+            val price = manager.getCurrentPrice(stockname)
+            val quantity = manager.getQuantity(stockname)
+            stockDataLoaded(price, quantity)
+        }
+        thread {
+            val history = manager.getHistoricPrices(stockname)
+            stockHistoryLoaded(history)
+        }
     }
 
     private fun loadChart(PriceHistory : StockHistoryData){
@@ -109,54 +126,80 @@ class StockDialogFragment(
     }
 
     fun stockNamesLoaded(stocknames : List<String>){
-        binding.stockInput.validator = object : AutoCompleteTextView.Validator {
+        try {
+            requireActivity().runOnUiThread {
+                binding.stockInput.validator = object : AutoCompleteTextView.Validator {
 
-            override fun isValid(p0: CharSequence?): Boolean {
-                val ret = stocknames.contains(p0.toString())
-                if(ret) {
-                    stockname = p0.toString()
-                    stockSelected()
+                    override fun isValid(p0: CharSequence?): Boolean {
+                        val ret = stocknames.contains(p0.toString())
+                        if (ret) {
+                            stockname = p0.toString()
+                            stockSelected()
+                        } else
+                            lockBuy()
+                        return ret
+                    }
+
+                    override fun fixText(p0: CharSequence?): CharSequence {
+                        return p0 ?: ""
+                    }
                 }
-                else
-                    lockBuy()
-                return ret
-            }
 
-            override fun fixText(p0: CharSequence?): CharSequence {
-                return p0 ?: ""
+                binding.stockInput.setAdapter(
+                    ArrayAdapter(
+                        requireActivity().applicationContext,
+                        R.layout.stock_autocomplete_list_element,
+                        stocknames
+                    )
+                )
+                binding.stockInput.setOnItemClickListener { adapterView, view, i, l -> binding.stockInput.performValidation() } //todo completion handling
+
             }
         }
-
-        binding.stockInput.setAdapter(ArrayAdapter(requireActivity().applicationContext, R.layout.stock_autocomplete_list_element,stocknames))
-        binding.stockInput.setOnItemClickListener { adapterView, view, i, l -> binding.stockInput.performValidation()} //todo completion handling
+        catch (e : Throwable){
+            Log.e("debug", e.printStackTrace().toString())
+        }
 
     }
 
     fun stockDataLoaded(price : Double, currentQuantity : Double){
-        binding.stockdialogPrice.text =
-            getString(R.string.price_string, price.toString(), currentQuantity.toString())
+        try {
+            requireActivity().runOnUiThread {
+                binding.stockdialogPrice.text =
+                    getString(R.string.price_string, price.toString(), currentQuantity.toString())
 
-        binding.stockDialogQuantity.addTextChangedListener {
-            validateOptions(price, currentQuantity)
+                binding.stockDialogQuantity.addTextChangedListener {
+                    validateOptions(price, currentQuantity)
+                }
+
+                binding.stockDialogBuyButton.setOnClickListener {
+                    val quantity = binding.stockDialogQuantity.text.toString().toDouble()
+                    manager.BuyStock(stockname!!, quantity, price)
+                    dismiss()
+                }
+
+                binding.stockDialogSellButton.setOnClickListener {
+                    val quantity = binding.stockDialogQuantity.text.toString().toDouble()
+                    manager.SellStock(stockname!!, quantity, price)
+                    dismiss()
+                }
+                unlockBuy()
+            }
         }
-
-        binding.stockDialogBuyButton.setOnClickListener {
-            val quantity = binding.stockDialogQuantity.text.toString().toDouble()
-            manager.BuyStock(stockname!!, quantity, price)
-            dismiss()
+        catch (e : Throwable){
+            Log.e("debug", e.printStackTrace().toString())
         }
-
-        binding.stockDialogSellButton.setOnClickListener {
-            val quantity = binding.stockDialogQuantity.text.toString().toDouble()
-            manager.SellStock(stockname!!, quantity, price)
-            dismiss()
-        }
-
-        unlockBuy()
     }
 
     fun stockHistoryLoaded(history : StockHistoryData){
-        loadChart(history)
+        try {
+            requireActivity().runOnUiThread {
+                loadChart(history)
+            }
+        }
+        catch (e : Throwable){
+            Log.e("debug", e.printStackTrace().toString())
+        }
     }
 
 }
