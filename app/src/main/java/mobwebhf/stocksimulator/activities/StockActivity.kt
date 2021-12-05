@@ -41,8 +41,15 @@ class StockActivity() : AppCompatActivity(), StockAdapter.Listener{
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val dialog = StockDialogFragment(PortfolioManager(portfolio, database, adapter))
-        dialog.show(supportFragmentManager, null)
+        when(item.itemId) {
+            R.id.add_stock_button -> {
+                val dialog = StockDialogFragment(PortfolioManager(portfolio, database, adapter))
+                dialog.show(supportFragmentManager, null)
+            }
+            R.id.update_stock_button -> {
+                PortfolioManager(portfolio, database, adapter).getCurrentPrices()
+            }
+        }
         return true
     }
 

@@ -71,7 +71,12 @@ class PortfolioManager(val portfolio : PortfolioData, val db : AppDatabase, val 
     }
 
     fun getCurrentPrices() {
-        //todo network query
+        thread {
+            val names = db.stockDao().getStockNames()
+            for(name in names){
+                val price = getCurrentPrice(name)
+            }//todo update logic
+        }
     }
 
     fun getHistoricPrices(name : String) : StockHistoryData {

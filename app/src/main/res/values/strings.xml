@@ -20,4 +20,5 @@
     <string name="portfolio_profit">Profit:</string>
     <string name="portfolio_balance">Balance:</string>
     <string name="name">Name:</string>
+    <string name="update_stocks">Update Stocks</string>
 </resources>

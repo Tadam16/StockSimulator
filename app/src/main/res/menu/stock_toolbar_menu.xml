@@ -4,4 +4,8 @@
     <item android:id="@+id/add_stock_button"
         android:title="@string/add_stock_button"
         app:showAsAction="always" />
+
+    <item android:id="@+id/update_stock_button"
+        android:title="@string/update_stocks"
+        app:showAsAction="always"/>
 </menu>
