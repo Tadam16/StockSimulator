@@ -211,7 +211,7 @@ class StockDialogFragment(
                 stocknames
             )
         )
-        binding.stockInput.setOnItemClickListener { adapterView, view, i, l -> binding.stockInput.performValidation() } //todo completion handling
+        binding.stockInput.setOnItemClickListener { adapterView, view, i, l -> binding.stockInput.performValidation() }
 
     }
 
