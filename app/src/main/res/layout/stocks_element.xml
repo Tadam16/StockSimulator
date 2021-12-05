@@ -3,13 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="10dp">
+    android:layout_margin="4dp"
+    android:padding="4dp"
+    android:background="@color/cardview_dark_background">
 
     <TextView
         android:id="@+id/stock_symbol_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/stock_symbol"
+        style="@style/stock_list_element_style"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
@@ -17,6 +20,7 @@
         android:id="@+id/stock_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        style="@style/stock_list_element_style"
         app:layout_constraintLeft_toRightOf="@id/stock_symbol_text"
         app:layout_constraintBaseline_toBaselineOf="@id/stock_symbol_text"/>
 
@@ -26,14 +30,16 @@
         android:layout_height="wrap_content"
         android:text="@string/stock_quantity"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/stock_symbol_text"/>
+        app:layout_constraintTop_toBottomOf="@id/stock_symbol_text"
+        style="@style/stock_list_element_style"/>
 
     <TextView
         android:id="@+id/stock_quantity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toRightOf="@id/stock_quantity_text"
-        app:layout_constraintBaseline_toBaselineOf="@id/stock_quantity_text"/>
+        app:layout_constraintBaseline_toBaselineOf="@id/stock_quantity_text"
+        style="@style/stock_list_element_style"/>
 
     <TextView
         android:id="@+id/stock_value_text"
@@ -41,14 +47,16 @@
         android:layout_height="wrap_content"
         android:text="@string/stock_value"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/stock_quantity_text"/>
+        app:layout_constraintTop_toBottomOf="@id/stock_quantity_text"
+        style="@style/stock_list_element_style"/>
 
     <TextView
         android:id="@+id/stock_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toRightOf="@id/stock_value_text"
-        app:layout_constraintBaseline_toBaselineOf="@id/stock_value_text"/>
+        app:layout_constraintBaseline_toBaselineOf="@id/stock_value_text"
+        style="@style/stock_list_element_style"/>
 
     <TextView
         android:id="@+id/stock_price_text"
@@ -56,14 +64,16 @@
         android:layout_height="wrap_content"
         android:text="@string/stock_price"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/stock_value_text"/>
+        app:layout_constraintTop_toBottomOf="@id/stock_value_text"
+        style="@style/stock_list_element_style"/>
 
     <TextView
         android:id="@+id/stock_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toRightOf="@id/stock_price_text"
-        app:layout_constraintBaseline_toBaselineOf="@id/stock_price_text"/>
+        app:layout_constraintBaseline_toBaselineOf="@id/stock_price_text"
+        style="@style/stock_list_element_style"/>
 
     <TextView
         android:id="@+id/stock_profit_text"
@@ -71,13 +81,15 @@
         android:layout_height="wrap_content"
         android:text="@string/stock_profit"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/stock_price_text" />
+        app:layout_constraintTop_toBottomOf="@id/stock_price_text"
+        style="@style/stock_list_element_style"/>
 
     <TextView
         android:id="@+id/stock_profit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toRightOf="@id/stock_profit_text"
-        app:layout_constraintBaseline_toBaselineOf="@id/stock_profit_text"/>
+        app:layout_constraintBaseline_toBaselineOf="@id/stock_profit_text"
+        style="@style/stock_list_element_style"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

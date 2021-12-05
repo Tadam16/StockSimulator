@@ -3,7 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:weightSum="9"
-    android:layout_margin="16dp">
+    android:layout_margin="8dp"
+    android:padding="8dp"
+    android:background="@color/cardview_dark_background">
 
     <LinearLayout
         android:layout_width="0dp"
@@ -14,12 +16,14 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/name"/>
+            android:text="@string/name"
+            style="@style/stock_list_element_style"/>
 
         <TextView
             android:id="@+id/portfolio_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            style="@style/stock_list_element_style"/>
 
     </LinearLayout>
 
@@ -32,12 +36,14 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/portfolio_value"/>
+            android:text="@string/portfolio_value"
+            style="@style/stock_list_element_style"/>
 
         <TextView
             android:id="@+id/portfolio_value"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            style="@style/stock_list_element_style"/>
 
     </LinearLayout>
 
@@ -50,12 +56,14 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/portfolio_profit"/>
+            android:text="@string/portfolio_profit"
+            style="@style/stock_list_element_style"/>
 
         <TextView
             android:id="@+id/portfolio_profit"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            style="@style/stock_list_element_style"/>
 
     </LinearLayout>
 
@@ -68,12 +76,14 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/portfolio_balance"/>
+            android:text="@string/portfolio_balance"
+            style="@style/stock_list_element_style"/>
 
         <TextView
             android:id="@+id/portfolio_money"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            style="@style/stock_list_element_style"/>
 
     </LinearLayout>
 
@@ -82,6 +92,7 @@
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="match_parent"
-        android:src="@drawable/ic_delete_grey600_48dp"/>
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_delete"/>
 
 </LinearLayout>
